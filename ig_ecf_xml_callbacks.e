@@ -1,10 +1,10 @@
 note
 	description: "[
-		Representation of an {ECF_XML_CALLBACKS}.
+		Representation of an {IG_ECF_XML_CALLBACKS}.
 		]"
 
 class
-	ECF_XML_CALLBACKS
+	IG_ECF_XML_CALLBACKS
 
 inherit
 	XML_CALLBACKS_NULL
@@ -15,6 +15,8 @@ inherit
 		end
 
 	IG_CONSTANTS
+
+	IG_ANY
 
 create
 	make
@@ -41,6 +43,7 @@ feature -- Events
 			elseif is_last_tag_library then
 				if a_local_part.same_string (name_attribute_string) then
 					last_library_name := a_value
+					last_library_location := Void
 				elseif a_local_part.same_string (location_attribute_name_string) then
 					last_library_location := a_value
 				end
@@ -55,7 +58,7 @@ feature -- Events
 			elseif is_last_tag_target then
 				if a_local_part.same_string (name_attribute_string) then
 					last_target_name := a_value
-					target_list.force (a_value)
+					targets.force (a_value)
 				end
 			end
 		end
@@ -65,6 +68,7 @@ feature -- Events
 		do
 			if is_last_tag_description then
 				last_description := a_content
+				descriptions.force (a_content)
 			end
 		end
 
@@ -86,7 +90,8 @@ feature -- Data
 
 	last_uuid: detachable READABLE_STRING_32
 	last_description: detachable READABLE_STRING_32 	-- Fully optional in ECF XML
-	target_list: ARRAYED_LIST [READABLE_STRING_32] attribute create Result.make (10) end
+	descriptions: ARRAYED_LIST [READABLE_STRING_32] attribute create Result.make (10) end
+	targets: ARRAYED_LIST [READABLE_STRING_32] attribute create Result.make (10) end
 	last_target_name: detachable READABLE_STRING_32
 	attached_target_name: READABLE_STRING_32			-- Non-optional in ECF XML
 		do
@@ -157,8 +162,5 @@ feature {NONE} -- Implementation: Constants
 	uuid_attribute_name_string: STRING = "uuid"
 	location_attribute_name_string: STRING = "location"
 	testing_library_name_string: STRING = "testing"
-
-	github_tag_string: STRING = "$GITHUB"
-	ise_library_tag_string: STRING = "$ISE_LIBRARY"
 
 end

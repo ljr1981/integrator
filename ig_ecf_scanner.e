@@ -42,7 +42,7 @@ class
 	IG_ECF_SCANNER
 
 inherit
-	LE_LOGGING_AWARE
+	IG_ANY
 
 	IG_CONSTANTS
 
@@ -66,6 +66,44 @@ feature -- Access
 													suppliers,
 													clients: ARRAYED_LIST [PATH]]
 
+feature -- Status Report
+
+	trunk_count: INTEGER
+			-- `trunk_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if ic_ecf.item.is_trunk then
+					Result := Result + 1
+				end
+			end
+		end
+
+	branch_count: INTEGER
+			-- `branch_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if ic_ecf.item.is_branch then
+					Result := Result + 1
+				end
+			end
+		end
+
+	leaf_count: INTEGER
+			-- `leaf_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if ic_ecf.item.is_leaf then
+					Result := Result + 1
+				end
+			end
+		end
+
 feature -- Basic Operations
 
 	scan_github
@@ -74,17 +112,6 @@ feature -- Basic Operations
 			scan_path (github_path, default_scanning_start_level)
 			identify_ecf_dependencies
 		end
-
-feature {NONE} -- Implementation: Access
-
-	ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID]
-			-- A list of `ecf_library_dependencies' for each `ecf_libraries' entry.
-		attribute
-			create Result.make (default_ecf_libraries_capacity)
-		end
-
-	ecf_library_dependencies_data_anchor: detachable TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]
-			-- `ecf_library_dependencies_data_anchor' for `ecf_library_dependencies'.
 
 feature {NONE} -- Implementation: Basic Operations: Scanning
 
@@ -171,14 +198,16 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				]"
 		local
 			l_parser: XML_PARSER
-			l_callbacks: ECF_XML_CALLBACKS
+			l_callbacks: IG_ECF_XML_CALLBACKS
 			l_uuid: UUID
 			l_is_computed_uuid: BOOLEAN
+			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID]
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make
 			l_parser.set_callbacks (l_callbacks)
 			l_parser.parse_from_path (a_last_ecf_path)
+			create l_ecf_library_dependencies.make (Default_ecf_libraries_capacity)
 
 			if attached l_callbacks.last_system_name then
 				if attached l_callbacks.last_uuid as al_uuid_string and then (create {UUID}).is_valid_uuid (al_uuid_string) then
@@ -188,17 +217,15 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 					l_uuid := (create {RANDOMIZER}).uuid
 					l_is_computed_uuid := True
 				end
-				if not l_callbacks.libraries.is_empty then
-					across
-						l_callbacks.libraries as ic_libs
-					loop
-						ecf_library_dependencies.force ([ic_libs.item.name, ic_libs.item.location, ic_libs.item.is_github, ic_libs.item.is_ise, ic_libs.item.is_local, ic_libs.item.is_computed_uuid], l_uuid)
-					end
+				across
+					l_callbacks.libraries as ic_libs
+				loop
+					l_ecf_library_dependencies.force ([ic_libs.item.name, ic_libs.item.location, ic_libs.item.is_github, ic_libs.item.is_ise, ic_libs.item.is_local, ic_libs.item.is_computed_uuid], l_uuid)
 				end
 				ecf_libraries.force ([l_callbacks.attached_system_name,
-										l_callbacks.target_list,
+										l_callbacks.targets,
 										l_callbacks.last_test_target,
-										ecf_library_dependencies,
+										l_ecf_library_dependencies,
 										l_is_computed_uuid,
 										a_last_git_path,
 										a_last_git_config_path,
@@ -207,7 +234,6 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 										False,
 										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity),
 										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity)], l_uuid)
-				ecf_library_dependencies.wipe_out -- This is for clean-up, so we don't get confused later.
 			end
 		end
 
@@ -255,10 +281,23 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			-- `scan_and_mark_trunks'.
 		note
 			design: "[
-
+				(1) Start by going over the `ecf_libraries'. We're looking for
+					ECF items where the contained `library_dependencies' items
+					have NO "$GITHUB"-based entries. Those having none, will get
+					their `is_trunk' turned on.
 				]"
 		do
-
+			across
+				ecf_libraries as ic_ecf
+			loop
+				ic_ecf.item.is_trunk := across ic_ecf.item.library_dependencies as ic_libs all
+												not ic_libs.item.location.has_substring (Github_tag_string)
+											end
+				logger.write_information ("ECF: " + ic_ecf.item.system_name + "%Tic_ecf.item.is_trunk: " + ic_ecf.item.is_trunk.out)
+				across ic_ecf.item.library_dependencies as ic_libs loop
+					logger.write_information (ic_libs.item.location + "%N")
+				end
+			end
 		end
 
 	scan_and_mark_branches
@@ -272,6 +311,9 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 		end
 
 feature {NONE} -- Implementation: Constants
+
+	ecf_library_dependencies_data_anchor: detachable TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]
+			-- `ecf_library_dependencies_data_anchor' for `ecf_library_dependencies'.
 
 	default_ecf_libraries_capacity: INTEGER = 500
 			-- `default_ecf_libraries_capacity' is 500.

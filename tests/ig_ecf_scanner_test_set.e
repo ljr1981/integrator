@@ -1,9 +1,9 @@
 note
-	description: "Tests of {INTEGRATOR}."
+	description: "Tests of {IG_ECF_SCANNER}."
 	testing: "type/manual"
 
 class
-	INTEGRATOR_TEST_SET
+	IG_ECF_SCANNER_TEST_SET
 
 inherit
 	EQA_TEST_SET
@@ -41,6 +41,8 @@ feature -- Test routines
 			assert_integers_equal ("gits_have_configs", l_github_count, l_config_count)
 			assert_integers_equal ("has_23_githubs_you_may_have_more_or_less", 23, l_github_count)
 			assert_integers_equal ("has_23_configs_you_may_have_more_or_less", 23, l_config_count)
+				-- marking tests
+			assert_integers_equal ("has_x_trunks", 10, l_projects.trunk_count)
 		end
 
 end

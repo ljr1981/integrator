@@ -34,4 +34,7 @@ feature {NONE} -- Implementation: Constants
 	EIFGENs_string: STRING = "EIFGENs"
 	ecf_extension_string: STRING = "ecf"
 
+	github_tag_string: STRING = "$GITHUB"
+	ise_library_tag_string: STRING = "$ISE_LIBRARY"
+
 end
