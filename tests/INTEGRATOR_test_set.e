@@ -34,7 +34,7 @@ feature -- Test routines
 					l_github_count := l_github_count + 1
 				end
 			end
-			assert_integers_equal ("has_x_githubs", 0, l_github_count)
+			assert_integers_equal ("has_26_githubs_you_may_have_more_or_less", 26, l_github_count)
 		end
 
 end

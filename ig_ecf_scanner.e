@@ -110,7 +110,7 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 					until
 						l_has_git
 					loop
-						if ic_parent_entries.item.name.has_substring ("\.git") then
+						if ic_parent_entries.item.name.has_substring (".git") then
 							create l_git_path.make_from_string (l_parent.name.out + "\" + ic_parent_entries.item.name.out)
 							l_has_git := attached l_git_path
 							if l_has_git and then attached l_git_path as al_git_path then
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 								until
 									l_has_git_config
 								loop
-									if ic_git_parent_entries.item.name.has_substring ("\config") then
+									if ic_git_parent_entries.item.name.has_substring ("config") then
 										create l_git_config_path.make_from_string (l_git_parent.name.out + "\" + ic_git_parent_entries.item.name.out)
 										l_has_git_config := attached l_git_config_path
 									end
