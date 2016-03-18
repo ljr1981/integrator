@@ -18,10 +18,23 @@ inherit
 
 feature -- Test routines
 
-	abc_tests
-			-- `abc_tests'
+	integrator_tests
+			-- `integrator_tests'
+		local
+			l_projects: IG_ECF_SCANNER
+			l_github_count: INTEGER
 		do
-			do_nothing -- yet ...
+			create l_projects
+			l_projects.scan_github
+			assert_integers_equal ("has_130_you_may_have_more_or_less", 130, l_projects.ecf_libraries.count)
+			across
+				l_projects.ecf_libraries as ic_ecf
+			loop
+				if attached ic_ecf.item.github_path then
+					l_github_count := l_github_count + 1
+				end
+			end
+			assert_integers_equal ("has_x_githubs", 0, l_github_count)
 		end
 
 end
