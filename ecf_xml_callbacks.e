@@ -47,7 +47,7 @@ feature -- Events
 				if attached last_library_name as al_name and then attached last_library_location as al_location then
 					last_is_github := al_location.has_substring (github_tag_string)
 					last_is_ise := al_location.has_substring (ise_library_tag_string)
-					libraries.force ([al_name, al_location, last_is_github, last_is_ise, is_local_library, is_computed_uuid])
+					libraries.force ([al_name, al_location, last_is_github, last_is_ise, is_local_library, not attached last_uuid])
 					if al_name.same_string (testing_library_name_string) then
 						last_test_target := last_target_name
 					end
@@ -85,29 +85,6 @@ feature -- Data
 		end
 
 	last_uuid: detachable READABLE_STRING_32
-	attached_uuid: UUID								-- Non-optional in ECF XML
-		note
-			lessons_learned: "[
-				(1) Not all ECFs (from ISE and others) have valid UUIDs! Sometimes,
-					what we have (encounter) is a "{UUID\}". We may need to study
-					that one out and discover how to handle it properly. Until then,
-					the code below does a test for `is_valid_uuid' and computes one
-					of its own if not.
-				]"
-		local
-			l_uuid: UUID
-		do
-			create l_uuid
-			if attached last_uuid as al_uuid and then l_uuid.is_valid_uuid (al_uuid) then
-				Result := (create {UUID}.make_from_string (al_uuid))
-				is_computed_uuid := False
-			else
-				Result := (create {RANDOMIZER}).uuid
-				is_computed_uuid := True
-			end
-		end
-	is_computed_uuid: BOOLEAN
-
 	last_description: detachable READABLE_STRING_32 	-- Fully optional in ECF XML
 	target_list: ARRAYED_LIST [READABLE_STRING_32] attribute create Result.make (10) end
 	last_target_name: detachable READABLE_STRING_32

@@ -112,8 +112,8 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 						if ic_parent_entries.item.name.has_substring (".git") and then not ic_parent_entries.item.name.has_substring (".gitignore") then
 							create l_git_path.make_from_string (l_parent.name.out + "\" + ic_parent_entries.item.name.out)
 							l_has_git := attached l_git_path
-							if l_has_git and then attached l_git_path as al_git_path then
-								create l_git_parent.make_with_path (al_git_path)
+							if l_has_git and then attached l_git_path then
+								create l_git_parent.make_with_path (l_git_path)
 								across
 									l_git_parent.entries as ic_git_parent_entries
 								until
@@ -163,6 +163,8 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 		local
 			l_parser: XML_PARSER
 			l_callbacks: ECF_XML_CALLBACKS
+			l_uuid: UUID
+			l_is_computed_uuid: BOOLEAN
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make
@@ -170,20 +172,27 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_parser.parse_from_path (a_last_ecf_path)
 
 			if attached l_callbacks.last_system_name then
+				if attached l_callbacks.last_uuid as al_uuid_string and then (create {UUID}).is_valid_uuid (al_uuid_string) then
+					l_uuid := create {UUID}.make_from_string (al_uuid_string)
+					l_is_computed_uuid := False
+				else
+					l_uuid := (create {RANDOMIZER}).uuid
+					l_is_computed_uuid := True
+				end
 				if not l_callbacks.libraries.is_empty then
 					across
 						l_callbacks.libraries as ic_libs
 					loop
-						ecf_library_dependencies.force ([ic_libs.item.name, ic_libs.item.location, ic_libs.item.is_github, ic_libs.item.is_ise, ic_libs.item.is_local, ic_libs.item.is_computed_uuid], l_callbacks.attached_uuid)
+						ecf_library_dependencies.force ([ic_libs.item.name, ic_libs.item.location, ic_libs.item.is_github, ic_libs.item.is_ise, ic_libs.item.is_local, ic_libs.item.is_computed_uuid], l_uuid)
 					end
 				end
 				ecf_libraries.force ([l_callbacks.attached_system_name,
 										l_callbacks.target_list,
 										l_callbacks.last_test_target,
 										ecf_library_dependencies,
-										l_callbacks.is_computed_uuid,
+										l_is_computed_uuid,
 										a_last_git_path,
-										a_last_git_config_path], l_callbacks.attached_uuid)
+										a_last_git_config_path], l_uuid)
 				ecf_library_dependencies.wipe_out -- This is for clean-up, so we don't get confused later.
 			end
 		end
