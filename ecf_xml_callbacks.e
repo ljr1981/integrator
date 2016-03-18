@@ -14,6 +14,8 @@ inherit
 			on_content
 		end
 
+	IG_CONSTANTS
+
 create
 	make
 
@@ -31,27 +33,27 @@ feature -- Events
 			-- <Precursor>
 		do
 			if is_last_tag_system then
-				if a_local_part.same_string ("name") then
+				if a_local_part.same_string (name_attribute_string) then
 					last_system_name := a_value
-				elseif a_local_part.same_string ("uuid") then
+				elseif a_local_part.same_string (uuid_attribute_name_string) then
 					last_uuid := a_value
 				end
 			elseif is_last_tag_library then
-				if a_local_part.same_string ("name") then
+				if a_local_part.same_string (name_attribute_string) then
 					last_library_name := a_value
-				elseif a_local_part.same_string ("location") then
+				elseif a_local_part.same_string (location_attribute_name_string) then
 					last_library_location := a_value
 				end
 				if attached last_library_name as al_name and then attached last_library_location as al_location then
-					last_is_github := al_location.has_substring ("$GITHUB")
-					last_is_ise := al_location.has_substring ("$ISE_LIBRARY")
+					last_is_github := al_location.has_substring (github_tag_string)
+					last_is_ise := al_location.has_substring (ise_library_tag_string)
 					libraries.force ([al_name, al_location, last_is_github, last_is_ise, is_local_library, is_computed_uuid])
-					if al_name.same_string ("testing") then
+					if al_name.same_string (testing_library_name_string) then
 						last_test_target := last_target_name
 					end
 				end
 			elseif is_last_tag_target then
-				if a_local_part.same_string ("name") then
+				if a_local_part.same_string (name_attribute_string) then
 					last_target_name := a_value
 					target_list.force (a_value)
 				end
@@ -140,25 +142,25 @@ feature -- Status Report
 	is_last_tag_system: BOOLEAN
 			-- `is_last_tag_system'?
 		do
-			Result := is_last_tag ("system")
+			Result := is_last_tag (system_tag_string)
 		end
 
 	is_last_tag_description: BOOLEAN
 			-- `is_last_tag_description'?
 		do
-			Result := is_last_tag ("description")
+			Result := is_last_tag (description_tag_string)
 		end
 
 	is_last_tag_target: BOOLEAN
 			-- `is_last_tag_target'?
 		do
-			Result := is_last_tag ("target")
+			Result := is_last_tag (target_tag_string)
 		end
 
 	is_last_tag_library: BOOLEAN
 			-- `is_last_tag_library'?
 		do
-			Result := is_last_tag ("library")
+			Result := is_last_tag (library_tag_string)
 		end
 
 	is_last_tag (a_name: STRING): BOOLEAN
@@ -166,5 +168,20 @@ feature -- Status Report
 		do
 			Result := attached last_start_tag_local_part as al_local and then al_local.same_string (a_name)
 		end
+
+feature {NONE} -- Implementation: Constants
+
+	system_tag_string: STRING = "system"
+	description_tag_string: STRING = "description"
+	target_tag_string: STRING = "target"
+	library_tag_string: STRING = "library"
+
+	name_attribute_string: STRING = "name"
+	uuid_attribute_name_string: STRING = "uuid"
+	location_attribute_name_string: STRING = "location"
+	testing_library_name_string: STRING = "testing"
+
+	github_tag_string: STRING = "$GITHUB"
+	ise_library_tag_string: STRING = "$ISE_LIBRARY"
 
 end

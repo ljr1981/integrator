@@ -44,30 +44,29 @@ class
 inherit
 	LE_LOGGING_AWARE
 
+	IG_CONSTANTS
+
 feature -- Access
 
-	ecf_libraries: HASH_TABLE [TUPLE [system_name: READABLE_STRING_32; target_list: ARRAYED_LIST [READABLE_STRING_32];
-										test_target: detachable READABLE_STRING_32;
-										library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID];
-										is_computed_uuid: BOOLEAN;
-										github_path,
-										github_config_path: detachable PATH], UUID]
+	ecf_libraries: HASH_TABLE [attached like ecf_libraries_data_anchor, UUID]
 			-- `ecf_libraries' list.
 		attribute
-			create Result.make (500)
+			create Result.make (default_ecf_libraries_capacity)
 		end
+
+	ecf_libraries_data_anchor: detachable TUPLE [system_name: READABLE_STRING_32; target_list: ARRAYED_LIST [READABLE_STRING_32];
+													test_target: detachable READABLE_STRING_32;
+													library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID];
+													is_computed_uuid: BOOLEAN;
+													github_path,
+													github_config_path: detachable PATH]
 
 feature -- Basic Operations: Scanning
 
 	scan_github
 			-- `scan_github'.
 		do
-			scan_path (github_path, 0)
-			across
-				ecf_library_dependencies as ic_items
-			loop
-				logger.write_information ("stuff_out" + "," + ic_items.key.out) -- FIXME
-			end
+			scan_path (github_path, default_scanning_start_level)
 		end
 
 feature {NONE} -- Implementation: Access
@@ -75,7 +74,7 @@ feature {NONE} -- Implementation: Access
 	ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID]
 			-- A list of `ecf_library_dependencies' for each `ecf_libraries' entry.
 		attribute
-			create Result.make (500)
+			create Result.make (default_ecf_libraries_capacity)
 		end
 
 	ecf_library_dependencies_data_anchor: detachable TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]
@@ -103,7 +102,7 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 			l_has_git_config: BOOLEAN
 		do
 			if attached a_path.extension as al_ext then
-				if al_ext.same_string ("ecf") then
+				if al_ext.same_string (ecf_extension_string) then
 					create l_parent.make_with_path (a_path.parent)
 					across
 						l_parent.entries as ic_parent_entries
@@ -131,11 +130,11 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 					end
 					parse_ecf (a_path, l_git_path, l_git_config_path)
 				end
-			elseif a_path.name.has_substring ("\.git") then
+			elseif a_path.name.has_substring (dot_git_string) or a_path.name.has_substring (dot_gitignore_string) then
 				do_nothing
-			elseif a_path.name.has_substring ("\config") then
+			elseif a_path.name.has_substring (git_config_string) then
 				do_nothing
-			elseif a_path.name.has_substring ("EIFGENs") then
+			elseif a_path.name.has_substring (EIFGENs_string) then
 				do_nothing -- EIFGENs are ignored.
 			else
 				create l_dir.make_with_path (a_path)
@@ -171,7 +170,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_parser.parse_from_path (a_last_ecf_path)
 
 			if attached l_callbacks.last_system_name then
-				if l_callbacks.libraries.count > 0 then
+				if not l_callbacks.libraries.is_empty then
 					across
 						l_callbacks.libraries as ic_libs
 					loop
@@ -191,20 +190,10 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 
 feature {NONE} -- Implementation: Constants
 
-	Github_path: PATH
-			-- `Github_path' from system.
-		once
-			create Result.make_from_string (github_path_string)
-		end
+	default_ecf_libraries_capacity: INTEGER = 500
+			-- `default_ecf_libraries_capacity' is 500.
 
-	Github_path_string: STRING
-			-- `Github_path_string' from {EXECUTION_ENVIRONMENT}.
-		local
-			l_env: EXECUTION_ENVIRONMENT
-		once
-			create l_env
-			check attached {STRING_32} l_env.starting_environment.item ("GITHUB") as al_path_string then
-				Result := al_path_string
-			end
-		end
+	default_scanning_start_level: INTEGER = 0
+			-- `default_scanning_start_level' is zero because 0 = root folder.
+
 end
