@@ -50,7 +50,7 @@ feature -- Events
 				if attached last_library_name as al_name and then attached last_library_location as al_location then
 					last_is_github := al_location.has_substring (github_tag_string)
 					last_is_ise := al_location.has_substring (ise_library_tag_string) or al_location.has_substring (ise_eiffel_tag_string)
-					libraries.force ([al_name, al_location, last_is_github, last_is_ise, not (last_is_github or last_is_ise), not attached last_uuid])
+					libraries.force ([al_name, al_location, location_ecf_xml_uuid (al_location), last_is_github, last_is_ise, not (last_is_github or last_is_ise), not attached last_uuid])
 					if al_name.same_string (testing_library_name_string) then
 						last_test_target := last_target_name
 					end
@@ -60,6 +60,33 @@ feature -- Events
 					last_target_name := a_value
 					targets.force (a_value)
 				end
+			end
+		end
+
+	location_ecf_xml_uuid (a_location: STRING): detachable READABLE_STRING_32
+		local
+			l_callbacks: IG_ECF_XML_CALLBACKS
+			l_factory: XML_LITE_PARSER_FACTORY
+			l_parser: XML_LITE_PARSER
+			l_file: PLAIN_TEXT_FILE
+			l_file_name,
+			l_file_content: STRING
+		do
+			if last_is_github then
+				create l_callbacks.make
+				create l_factory
+				l_parser := l_factory.new_parser
+				l_parser.set_callbacks (l_callbacks)
+				l_file_name := a_location.twin
+				l_file_name.replace_substring_all (Github_tag_string, Github_path_string)
+				create l_file.make_open_read (l_file_name)
+				l_file.read_stream (l_file.count)
+				l_file_content := l_file.last_string.twin
+				l_file.close
+				l_parser.parse_from_string (l_file_content)
+				check has_uuid: attached l_callbacks.last_uuid as al_uuid then Result := al_uuid end
+			else
+				Result := Void
 			end
 		end
 
@@ -109,7 +136,7 @@ feature -- Data
 	last_is_github: BOOLEAN								-- Is the library a $GITHUB library?
 	last_is_ise: BOOLEAN								-- Is the library an $ISE_LIBRARY?
 
-	libraries: ARRAYED_LIST [TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]]
+	libraries: ARRAYED_LIST [TUPLE [name, location: READABLE_STRING_32; uuid: detachable READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]]
 			-- `libraries' from Current XML.
 		attribute
 			create Result.make (100)

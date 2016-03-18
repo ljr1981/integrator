@@ -37,5 +37,7 @@ feature {NONE} -- Implementation: Constants
 	github_tag_string: STRING = "$GITHUB"
 	ise_library_tag_string: STRING = "$ISE_LIBRARY"
 	ise_eiffel_tag_string: STRING = "$ISE_EIFFEL"
+	ise_eiffel_environment_variable: STRING = "C:\Program Files (x86)\Eiffel Software\EiffelStudio 15.12 GPL"
+	ise_library_environment_variable: STRING = "C:\Program Files (x86)\Eiffel Software\EiffelStudio 15.12 GPL"
 
 end

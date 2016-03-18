@@ -48,7 +48,7 @@ inherit
 
 feature -- Access
 
-	ecf_libraries: HASH_TABLE [attached like ecf_libraries_data_anchor, UUID]
+	ecf_libraries: HASH_TABLE [attached like ecf_libraries_data_anchor, STRING]
 			-- `ecf_libraries' list.
 		attribute
 			create Result.make (default_ecf_libraries_capacity)
@@ -56,7 +56,7 @@ feature -- Access
 
 	ecf_libraries_data_anchor: detachable TUPLE [system_name: READABLE_STRING_32; target_list: ARRAYED_LIST [READABLE_STRING_32];
 													test_target: detachable READABLE_STRING_32;
-													library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID];
+													library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING];
 													is_computed_uuid: BOOLEAN;
 													github_path,
 													github_config_path: detachable PATH;
@@ -201,13 +201,13 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_callbacks: IG_ECF_XML_CALLBACKS
 			l_uuid: UUID
 			l_is_computed_uuid: BOOLEAN
-			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID]
+			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING]
+			seeding_integer: INTEGER
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make
 			l_parser.set_callbacks (l_callbacks)
 			l_parser.parse_from_path (a_last_ecf_path)
-			create l_ecf_library_dependencies.make (Default_ecf_libraries_capacity)
 
 			if attached l_callbacks.last_system_name then
 				if attached l_callbacks.last_uuid as al_uuid_string and then (create {UUID}).is_valid_uuid (al_uuid_string) then
@@ -219,13 +219,30 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				end
 				across
 					l_callbacks.libraries as ic_libs
+				from
+					seeding_integer := l_callbacks.libraries.count
+					create l_ecf_library_dependencies.make (l_callbacks.libraries.count)
+				invariant
+					l_ecf_library_dependencies.count = l_callbacks.libraries.count - seeding_integer
 				loop
-					l_ecf_library_dependencies.force ([ic_libs.item.name, ic_libs.item.location, ic_libs.item.is_github, ic_libs.item.is_ise, ic_libs.item.is_local, ic_libs.item.is_computed_uuid], l_uuid)
+					l_ecf_library_dependencies.put ([ic_libs.item.name,
+														ic_libs.item.location,
+														ic_libs.item.uuid,
+														ic_libs.item.is_github,
+														ic_libs.item.is_ise,
+														ic_libs.item.is_local,
+														ic_libs.item.is_computed_uuid], seeding_integer.out)
+					seeding_integer := seeding_integer - 1
+				variant
+					seeding_integer
 				end
+
+				check same_count: l_callbacks.libraries.count = l_ecf_library_dependencies.count end
+
 				ecf_libraries.force ([l_callbacks.attached_system_name,
 										l_callbacks.targets,
 										l_callbacks.last_test_target,
-										l_ecf_library_dependencies,
+										l_ecf_library_dependencies.twin,
 										l_is_computed_uuid,
 										a_last_git_path,
 										a_last_git_config_path,
@@ -233,7 +250,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 										False,
 										False,
 										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity),
-										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity)], l_uuid)
+										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity)], l_uuid.out)
 			end
 		end
 
@@ -272,9 +289,38 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			term: "Branch ECF", "An ECF with both Supplier and Client $GITHUB-based ECFs."
 			term: "Leaf ECF", "An ECF with only Client, but no Supplier $GITHUB-based ECFs."
 		do
+			update_ecf_libraries_uuids
 			scan_and_mark_trunks
 			scan_and_mark_branches
 			-- leaf libraries remain as a result
+		end
+
+	update_ecf_libraries_uuids
+			-- `update_ecf_libraries_uuids'.
+		note
+			warning: "THIS DOES NOT WORK YET!"
+			design: "[
+
+				]"
+		local
+			l_lookup: HASH_TABLE [STRING, STRING]
+		do
+			create l_lookup.make (20_000)
+			across
+				ecf_libraries as ic_ecfs
+			loop
+				across
+					ic_ecfs.item.library_dependencies as ic_depends
+				loop
+					check seeding_integer: ic_depends.key.is_integer and then ic_depends.key.to_integer > 0 end
+					l_lookup.force ("", ic_depends.item.name)
+				end
+			end
+			across
+				ecf_libraries as ic_ecfs
+			loop
+				l_lookup.item (ic_ecfs.item.system_name) := ic_ecfs.key
+			end
 		end
 
 	scan_and_mark_trunks
@@ -308,7 +354,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 
 feature {NONE} -- Implementation: Constants
 
-	ecf_library_dependencies_data_anchor: detachable TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]
+	ecf_library_dependencies_data_anchor: detachable TUPLE [name, location: READABLE_STRING_32; uuid: detachable READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]
 			-- `ecf_library_dependencies_data_anchor' for `ecf_library_dependencies'.
 
 	default_ecf_libraries_capacity: INTEGER = 1000
