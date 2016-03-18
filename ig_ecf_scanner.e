@@ -107,7 +107,7 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 					l_dir.entries as ic_entries
 				loop
 					if not (ic_entries.item.is_current_symbol or ic_entries.item.is_parent_symbol) then -- ignore "."/".." paths
-						scan_path (create {PATH}.make_from_string (l_dir.name.out + "\" + ic_entries.item.name.out), a_level + 1)
+						scan_path (create {PATH}.make_from_string (l_dir.name.out + a_path.directory_separator.out + ic_entries.item.name.out), a_level + 1)
 					end
 				end
 			end
@@ -131,8 +131,8 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			until
 				l_has_git
 			loop
-				if ic_parent_entries.item.name.has_substring (".git") and then not ic_parent_entries.item.name.has_substring (".gitignore") then
-					create l_git_path.make_from_string (l_parent.name.out + "\" + ic_parent_entries.item.name.out)
+				if ic_parent_entries.item.name.has_substring (dot_git_string) and then not ic_parent_entries.item.name.has_substring (Dot_gitignore_string) then
+					create l_git_path.make_from_string (l_parent.name.out + a_path.directory_separator.out + ic_parent_entries.item.name.out)
 					l_has_git := attached l_git_path
 					if l_has_git and then attached l_git_path then
 						create l_git_parent.make_with_path (l_git_path)
@@ -141,8 +141,8 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 						until
 							l_has_git_config
 						loop
-							if ic_git_parent_entries.item.name.has_substring ("config") then
-								create l_git_config_path.make_from_string (l_git_parent.name.out + "\" + ic_git_parent_entries.item.name.out)
+							if ic_git_parent_entries.item.name.has_substring (Git_config_string) then
+								create l_git_config_path.make_from_string (l_git_parent.name.out + a_path.directory_separator.out + ic_git_parent_entries.item.name.out)
 								l_has_git_config := attached l_git_config_path
 							end
 						end
