@@ -87,53 +87,18 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 		note
 			design: "[
 				The `scan_path' is recursive (e.g. this feature calls itself).
-
 				]"
 		local
-			l_dir,
-			l_subdir,
-			l_parent,
-			l_git_parent: DIRECTORY
-			l_string_8: STRING_8
-			l_info: FILE_INFO
-			l_git_path,
-			l_git_config_path: detachable PATH
-			l_has_git,
-			l_has_git_config: BOOLEAN
+			l_dir: DIRECTORY
 		do
 			if attached a_path.extension as al_ext then
 				if al_ext.same_string (ecf_extension_string) then
-					create l_parent.make_with_path (a_path.parent)
-					across
-						l_parent.entries as ic_parent_entries
-					until
-						l_has_git
-					loop
-						if ic_parent_entries.item.name.has_substring (".git") and then not ic_parent_entries.item.name.has_substring (".gitignore") then
-							create l_git_path.make_from_string (l_parent.name.out + "\" + ic_parent_entries.item.name.out)
-							l_has_git := attached l_git_path
-							if l_has_git and then attached l_git_path then
-								create l_git_parent.make_with_path (l_git_path)
-								across
-									l_git_parent.entries as ic_git_parent_entries
-								until
-									l_has_git_config
-								loop
-									if ic_git_parent_entries.item.name.has_substring ("config") then
-										create l_git_config_path.make_from_string (l_git_parent.name.out + "\" + ic_git_parent_entries.item.name.out)
-										l_has_git_config := attached l_git_config_path
-									end
-								end
-							end
-							check has_config: l_has_git_config and attached l_git_config_path end
-						end
-					end
-					parse_ecf (a_path, l_git_path, l_git_config_path)
+					process_ecf (a_path)
 				end
 			elseif a_path.name.has_substring (dot_git_string) or a_path.name.has_substring (dot_gitignore_string) then
-				do_nothing
+				do_nothing -- .git is ignored.
 			elseif a_path.name.has_substring (git_config_string) then
-				do_nothing
+				do_nothing -- git config's are ignored.
 			elseif a_path.name.has_substring (EIFGENs_string) then
 				do_nothing -- EIFGENs are ignored.
 			else
@@ -149,6 +114,44 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 		end
 
 feature {NONE} -- Implementation: Basic Operations: Parsing
+
+	process_ecf (a_path: PATH)
+			-- `process_ecf' found in `a_path'.
+		local
+			l_parent: DIRECTORY
+			l_git_parent: DIRECTORY
+			l_git_path: detachable PATH
+			l_git_config_path: detachable PATH
+			l_has_git: BOOLEAN
+			l_has_git_config: BOOLEAN
+		do
+			create l_parent.make_with_path (a_path.parent)
+			across
+				l_parent.entries as ic_parent_entries
+			until
+				l_has_git
+			loop
+				if ic_parent_entries.item.name.has_substring (".git") and then not ic_parent_entries.item.name.has_substring (".gitignore") then
+					create l_git_path.make_from_string (l_parent.name.out + "\" + ic_parent_entries.item.name.out)
+					l_has_git := attached l_git_path
+					if l_has_git and then attached l_git_path then
+						create l_git_parent.make_with_path (l_git_path)
+						across
+							l_git_parent.entries as ic_git_parent_entries
+						until
+							l_has_git_config
+						loop
+							if ic_git_parent_entries.item.name.has_substring ("config") then
+								create l_git_config_path.make_from_string (l_git_parent.name.out + "\" + ic_git_parent_entries.item.name.out)
+								l_has_git_config := attached l_git_config_path
+							end
+						end
+					end
+					check has_config: l_has_git_config and attached l_git_config_path end
+				end
+			end
+			parse_ecf (a_path, l_git_path, l_git_config_path)
+		end
 
 	parse_ecf (a_last_ecf_path: PATH; a_last_git_path, a_last_git_config_path: detachable PATH)
 			-- `parse_ecf' found in `a_path'
