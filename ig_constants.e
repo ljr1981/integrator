@@ -36,5 +36,6 @@ feature {NONE} -- Implementation: Constants
 
 	github_tag_string: STRING = "$GITHUB"
 	ise_library_tag_string: STRING = "$ISE_LIBRARY"
+	ise_eiffel_tag_string: STRING = "$ISE_EIFFEL"
 
 end

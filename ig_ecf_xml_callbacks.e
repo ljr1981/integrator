@@ -49,8 +49,8 @@ feature -- Events
 				end
 				if attached last_library_name as al_name and then attached last_library_location as al_location then
 					last_is_github := al_location.has_substring (github_tag_string)
-					last_is_ise := al_location.has_substring (ise_library_tag_string)
-					libraries.force ([al_name, al_location, last_is_github, last_is_ise, is_local_library, not attached last_uuid])
+					last_is_ise := al_location.has_substring (ise_library_tag_string) or al_location.has_substring (ise_eiffel_tag_string)
+					libraries.force ([al_name, al_location, last_is_github, last_is_ise, not (last_is_github or last_is_ise), not attached last_uuid])
 					if al_name.same_string (testing_library_name_string) then
 						last_test_target := last_target_name
 					end
@@ -108,10 +108,6 @@ feature -- Data
 
 	last_is_github: BOOLEAN								-- Is the library a $GITHUB library?
 	last_is_ise: BOOLEAN								-- Is the library an $ISE_LIBRARY?
-	is_local_library: BOOLEAN 							-- Local: A library not $GITHUB or $ISE_LIBRARY?
-		do
-			Result := not (last_is_github and not last_is_ise)
-		end
 
 	libraries: ARRAYED_LIST [TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]]
 			-- `libraries' from Current XML.

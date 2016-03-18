@@ -291,12 +291,8 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				ecf_libraries as ic_ecf
 			loop
 				ic_ecf.item.is_trunk := across ic_ecf.item.library_dependencies as ic_libs all
-												not ic_libs.item.location.has_substring (Github_tag_string)
+												not ic_libs.item.is_github
 											end
-				logger.write_information ("ECF: " + ic_ecf.item.system_name + "%Tic_ecf.item.is_trunk: " + ic_ecf.item.is_trunk.out)
-				across ic_ecf.item.library_dependencies as ic_libs loop
-					logger.write_information (ic_libs.item.location + "%N")
-				end
 			end
 		end
 
@@ -315,13 +311,13 @@ feature {NONE} -- Implementation: Constants
 	ecf_library_dependencies_data_anchor: detachable TUPLE [name, location: READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]
 			-- `ecf_library_dependencies_data_anchor' for `ecf_library_dependencies'.
 
-	default_ecf_libraries_capacity: INTEGER = 500
-			-- `default_ecf_libraries_capacity' is 500.
+	default_ecf_libraries_capacity: INTEGER = 1000
+			-- `default_ecf_libraries_capacity' is 1000.
 
 	default_scanning_start_level: INTEGER = 0
 			-- `default_scanning_start_level' is zero because 0 = root folder.
 
-	Default_client_supplier_list_capacity: INTEGER = 100
-			-- `Default_client_supplier_list_capacity' is 100.
+	Default_client_supplier_list_capacity: INTEGER = 500
+			-- `Default_client_supplier_list_capacity' is 500.
 
 end
