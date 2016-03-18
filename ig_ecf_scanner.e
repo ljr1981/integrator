@@ -59,14 +59,20 @@ feature -- Access
 													library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID];
 													is_computed_uuid: BOOLEAN;
 													github_path,
-													github_config_path: detachable PATH]
+													github_config_path: detachable PATH;
+													is_trunk,
+													is_branch,
+													is_leaf: BOOLEAN;
+													suppliers,
+													clients: ARRAYED_LIST [PATH]]
 
-feature -- Basic Operations: Scanning
+feature -- Basic Operations
 
 	scan_github
 			-- `scan_github'.
 		do
 			scan_path (github_path, default_scanning_start_level)
+			identify_ecf_dependencies
 		end
 
 feature {NONE} -- Implementation: Access
@@ -195,9 +201,74 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 										ecf_library_dependencies,
 										l_is_computed_uuid,
 										a_last_git_path,
-										a_last_git_config_path], l_uuid)
+										a_last_git_config_path,
+										False,
+										False,
+										False,
+										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity),
+										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity)], l_uuid)
 				ecf_library_dependencies.wipe_out -- This is for clean-up, so we don't get confused later.
 			end
+		end
+
+	identify_ecf_dependencies
+			-- `identify_ecf_dependencies'.
+		note
+			design: "[
+				Once the `scan_github' is complete (use a state machine), then
+				we can begin the final step: Identifying ECF dependencies. This
+				is the step where we ID if an ECF is a Trunk, Branch, or Leaf.
+				
+				The `ecf_libraries' data has a `library_dependencies' table. This
+				table represents those that the ECF is dependent on. Scanning this
+				table reveals:
+				
+				(1) A "$GITHUB" ECF dependency = NOT Trunk (e.g. Branch or Leaf)
+					So--mark each `ecf_libraries' item with `is_trunk' as False,
+					otherwise--True.
+				(2) For each ECF in `ecf_libraries', scan for those that are: not `is_trunk'.
+					Each of the not-trunk libraries can then have its UUID scanned for in the
+					`library_dependencies' of the other ECF not-trunk libraries.
+					ECFs that DO HAVE "my" UUID in their `library_dependencies' list
+					means that "I" am an `is_branch' and not `is_leaf'.
+				(3) At the end of the two cycles above, our `ecf_libraries' list will
+					have data of: `is_trunk', `is_branch', and `is_leaf' that represents
+					the relative position of the ECF in the heirarchy.
+				(4) Moreover, each `ecf_libraries' item ought to have a list of:
+					
+						(4a) $GITHUB Supplier ECF libraries
+						(4b) $GITHUB Client ECF libraries
+					
+					These lists can be validated (contracted/tested) against the
+					flags: `is_trunk', `is_branch', and `is_leaf'.
+				]"
+			term: "Trunk ECF", "An ECF with only Supplier, but no Client $GITHUB-based ECFs."
+			term: "Branch ECF", "An ECF with both Supplier and Client $GITHUB-based ECFs."
+			term: "Leaf ECF", "An ECF with only Client, but no Supplier $GITHUB-based ECFs."
+		do
+			scan_and_mark_trunks
+			scan_and_mark_branches
+			-- leaf libraries remain as a result
+		end
+
+	scan_and_mark_trunks
+			-- `scan_and_mark_trunks'.
+		note
+			design: "[
+
+				]"
+		do
+
+		end
+
+	scan_and_mark_branches
+			-- `scan_and_mark_branches'.
+		note
+			design: "[
+
+				]"
+		do
+
 		end
 
 feature {NONE} -- Implementation: Constants
@@ -207,5 +278,8 @@ feature {NONE} -- Implementation: Constants
 
 	default_scanning_start_level: INTEGER = 0
 			-- `default_scanning_start_level' is zero because 0 = root folder.
+
+	Default_client_supplier_list_capacity: INTEGER = 100
+			-- `Default_client_supplier_list_capacity' is 100.
 
 end
