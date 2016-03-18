@@ -18,11 +18,12 @@ inherit
 
 feature -- Test routines
 
-	integrator_tests
-			-- `integrator_tests'
+	integrator_basic_tests
+			-- `integrator_basic_tests'
 		local
 			l_projects: IG_ECF_SCANNER
-			l_github_count: INTEGER
+			l_github_count,
+			l_config_count: INTEGER
 		do
 			create l_projects
 			l_projects.scan_github
@@ -33,8 +34,13 @@ feature -- Test routines
 				if attached ic_ecf.item.github_path then
 					l_github_count := l_github_count + 1
 				end
+				if attached ic_ecf.item.github_config_path then
+					l_config_count := l_config_count + 1
+				end
 			end
-			assert_integers_equal ("has_26_githubs_you_may_have_more_or_less", 26, l_github_count)
+			assert_integers_equal ("gits_have_configs", l_github_count, l_config_count)
+			assert_integers_equal ("has_23_githubs_you_may_have_more_or_less", 23, l_github_count)
+			assert_integers_equal ("has_23_configs_you_may_have_more_or_less", 23, l_config_count)
 		end
 
 end

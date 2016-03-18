@@ -51,7 +51,7 @@ feature -- Access
 										library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, UUID];
 										is_computed_uuid: BOOLEAN;
 										github_path,
-										github_config: detachable PATH], UUID]
+										github_config_path: detachable PATH], UUID]
 			-- `ecf_libraries' list.
 		attribute
 			create Result.make (500)
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 					until
 						l_has_git
 					loop
-						if ic_parent_entries.item.name.has_substring (".git") then
+						if ic_parent_entries.item.name.has_substring (".git") and then not ic_parent_entries.item.name.has_substring (".gitignore") then
 							create l_git_path.make_from_string (l_parent.name.out + "\" + ic_parent_entries.item.name.out)
 							l_has_git := attached l_git_path
 							if l_has_git and then attached l_git_path as al_git_path then
@@ -126,6 +126,7 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 									end
 								end
 							end
+							check has_config: l_has_git_config and attached l_git_config_path end
 						end
 					end
 					parse_ecf (a_path, l_git_path, l_git_config_path)
