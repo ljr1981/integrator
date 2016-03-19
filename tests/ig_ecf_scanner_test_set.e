@@ -16,6 +16,21 @@ inherit
 			default_create
 		end
 
+	TEST_SET_BRIDGE
+		undefine
+			default_create
+		end
+
+	IG_ANY
+		undefine
+			default_create
+		end
+
+	IG_CONSTANTS
+		undefine
+			default_create
+		end
+
 feature -- Test routines
 
 	integrator_basic_tests
@@ -42,9 +57,9 @@ feature -- Test routines
 			assert_integers_equal ("has_23_githubs_you_may_have_more_or_less", 23, l_github_count)
 			assert_integers_equal ("has_23_configs_you_may_have_more_or_less", 23, l_config_count)
 				-- marking tests
-			assert_integers_equal ("has_110_trunks", 110, l_projects.trunk_count)
-			assert_integers_equal ("has_N1_trunks", 20, l_projects.branch_count)
-			assert_integers_equal ("has_N2_trunks", 0, l_projects.leaf_count)
+			assert_integers_equal ("has_110_trunks", 104, l_projects.trunk_count)
+			assert_integers_equal ("has_20_branches", 0, l_projects.branch_count)
+			assert_integers_equal ("has_0_leaves", 26, l_projects.leaf_count)
 		end
 
 	ise_eiffel_test
@@ -58,7 +73,7 @@ feature -- Test routines
 		do
 			create l_env
 			check attached l_env.starting_environment.item ("ISE_EIFFEL") as al_item then
-				assert_strings_equal ("ise_eiffel_changed", {IG_CONSTANTS}.ise_eiffel_environment_variable, al_item.out)
+				assert_strings_equal ("ise_eiffel_changed", Ise_eiffel_environment_variable, al_item.out)
 			end
 		end
 
@@ -73,7 +88,7 @@ feature -- Test routines
 		do
 			create l_env
 			check attached l_env.starting_environment.item ("ISE_LIBRARY") as al_item then
-				assert_strings_equal ("ise_library_changed", {IG_CONSTANTS}.ise_library_environment_variable, al_item.out)
+				assert_strings_equal ("ise_library_changed", Ise_library_environment_variable, al_item.out)
 			end
 		end
 

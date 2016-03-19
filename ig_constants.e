@@ -9,7 +9,7 @@ note
 deferred class
 	IG_CONSTANTS
 
-feature {NONE} -- Implementation: Constants
+feature {TEST_SET_BRIDGE} -- Implementation: Constants
 
 	Github_path: PATH
 			-- `Github_path' from system.

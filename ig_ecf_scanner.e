@@ -56,7 +56,7 @@ feature -- Access
 
 	ecf_libraries_data_anchor: detachable TUPLE [system_name: READABLE_STRING_32; target_list: ARRAYED_LIST [READABLE_STRING_32];
 													test_target: detachable READABLE_STRING_32;
-													library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING];
+													supplier_libraries: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING];
 													is_computed_uuid: BOOLEAN;
 													github_path,
 													github_config_path: detachable PATH;
@@ -64,7 +64,7 @@ feature -- Access
 													is_branch,
 													is_leaf: BOOLEAN;
 													suppliers,
-													clients: ARRAYED_LIST [PATH]]
+													clients: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]]
 
 feature -- Status Report
 
@@ -249,8 +249,8 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 										False,
 										False,
 										False,
-										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity),
-										create {ARRAYED_LIST [PATH]}.make (Default_client_supplier_list_capacity)], l_uuid.out)
+										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity),
+										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity)], l_uuid.out)
 			end
 		end
 
@@ -289,67 +289,69 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			term: "Branch ECF", "An ECF with both Supplier and Client $GITHUB-based ECFs."
 			term: "Leaf ECF", "An ECF with only Client, but no Supplier $GITHUB-based ECFs."
 		do
-			update_ecf_libraries_uuids
-			scan_and_mark_trunks
-			scan_and_mark_branches
-			-- leaf libraries remain as a result
+			build_clients_list
+			scan_and_mark
 		end
 
-	update_ecf_libraries_uuids
-			-- `update_ecf_libraries_uuids'.
-		note
-			warning: "THIS DOES NOT WORK YET!"
-			design: "[
-
-				]"
-		local
-			l_lookup: HASH_TABLE [STRING, STRING]
+	build_clients_list
+			-- `build_clients_list' as `clients' on `ecf_libraries' and `add_supplier_to_client' for each client.
 		do
-			create l_lookup.make (20_000)
 			across
-				ecf_libraries as ic_ecfs
+				ecf_libraries as ic_client
 			loop
 				across
-					ic_ecfs.item.library_dependencies as ic_depends
+					ic_client.item.supplier_libraries as ic_supplier
 				loop
-					check seeding_integer: ic_depends.key.is_integer and then ic_depends.key.to_integer > 0 end
-					l_lookup.force ("", ic_depends.item.name)
+					if attached ic_supplier.item.uuid as al_supplier_uuid then
+						add_supplier_to_client (ic_client.item.system_name, ic_client.key, al_supplier_uuid)
+						add_supplier_to_client (ic_supplier.item.name, al_supplier_uuid, ic_client.key)
+					else
+						do_nothing -- non-attached = not GITHUB
+					end
 				end
 			end
-			across
-				ecf_libraries as ic_ecfs
-			loop
-				l_lookup.item (ic_ecfs.item.system_name) := ic_ecfs.key
+		end
+
+	add_supplier_to_client (a_supplier_name, a_supplier_uuid, a_client_uuid: READABLE_STRING_32)
+			-- `add_supplier_to_client' with `a_client' and `a_supplier' in `ecf_libraries' `suppliers' list.
+		do
+			check has_client: attached ecf_libraries.item (a_client_uuid) as al_client then
+				al_client.suppliers.force (a_supplier_name, a_supplier_uuid)
 			end
 		end
 
-	scan_and_mark_trunks
-			-- `scan_and_mark_trunks'.
+	scan_and_mark
+			-- `scan_and_mark'.
 		note
 			design: "[
-				(1) Start by going over the `ecf_libraries'. We're looking for
-					ECF items where the contained `library_dependencies' items
-					have NO "$GITHUB"-based entries. Those having none, will get
-					their `is_trunk' turned on.
+				Each `ecf_libraries' item ought to now have a `clients' and `suppliers' list
+				developed for them. So, finding those items with both some `clients' and
+				some `suppliers' indicates a "branch".
 				]"
 		do
 			across
-				ecf_libraries as ic_ecf
+				ecf_libraries as ic_ecf_libs
 			loop
-				ic_ecf.item.is_trunk := across ic_ecf.item.library_dependencies as ic_libs all
-												not ic_libs.item.is_github
-											end
+				ic_ecf_libs.item.is_branch := (ic_ecf_libs.item.clients.count > 0 and ic_ecf_libs.item.suppliers.count > 0)
+				ic_ecf_libs.item.is_leaf := (ic_ecf_libs.item.clients.count = 0 and ic_ecf_libs.item.suppliers.count > 0)
+				ic_ecf_libs.item.is_trunk := (ic_ecf_libs.item.clients.count = 0 and ic_ecf_libs.item.suppliers.count = 0)
+					-- Logging ...
+				logger.write_information ("--------------------------------")
+				logger.write_information ("%T%T%T" + ic_ecf_libs.item.system_name)
+				logger.write_information ("Clients:")
+				across
+					ic_ecf_libs.item.clients as ic_clients
+				loop
+					logger.write_information ("%T%T%T" + ic_clients.item)
+				end
+				logger.write_information ("Suppliers")
+				across
+					ic_ecf_libs.item.suppliers as ic_suppliers
+				loop
+					logger.write_information ("%T%T%T" + ic_suppliers.item)
+				end
+				logger.write_information ("--------------------------------")
 			end
-		end
-
-	scan_and_mark_branches
-			-- `scan_and_mark_branches'.
-		note
-			design: "[
-
-				]"
-		do
-
 		end
 
 feature {NONE} -- Implementation: Constants
