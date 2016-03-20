@@ -303,7 +303,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 					ic_client.item.supplier_libraries as ic_supplier
 				loop
 					if attached ic_supplier.item.uuid as al_supplier_uuid then
-						add_supplier_to_client (ic_client.item.system_name, ic_client.key, al_supplier_uuid)
+--						add_supplier_to_client (ic_client.item.system_name, ic_client.key, al_supplier_uuid)
 						add_supplier_to_client (ic_supplier.item.name, al_supplier_uuid, ic_client.key)
 					else
 						do_nothing -- non-attached = not GITHUB
