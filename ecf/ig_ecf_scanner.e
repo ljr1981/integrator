@@ -48,61 +48,49 @@ inherit
 
 feature -- Access
 
-	ecf_libraries: HASH_TABLE [attached like ecf_libraries_data_anchor, STRING]
+	ecf_libraries: HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING]
 			-- `ecf_libraries' list.
 		attribute
 			create Result.make (default_ecf_libraries_capacity)
 		end
 
-	ecf_libraries_data_anchor: detachable TUPLE [system_name: READABLE_STRING_32; target_list: ARRAYED_LIST [READABLE_STRING_32];
-													test_target: detachable READABLE_STRING_32;
-													supplier_libraries: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING];
-													is_computed_uuid: BOOLEAN;
-													github_path,
-													github_config_path: detachable PATH;
-													is_trunk,
-													is_branch,
-													is_leaf: BOOLEAN;
-													suppliers,
-													clients: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]]
-
 feature -- Status Report
 
-	trunk_count: INTEGER
-			-- `trunk_count'.
-		do
-			across
-				ecf_libraries as ic_ecf
-			loop
-				if ic_ecf.item.is_trunk then
-					Result := Result + 1
-				end
-			end
-		end
+--	trunk_count: INTEGER
+--			-- `trunk_count'.
+--		do
+--			across
+--				ecf_libraries as ic_ecf
+--			loop
+--				if ic_ecf.item.is_trunk then
+--					Result := Result + 1
+--				end
+--			end
+--		end
 
-	branch_count: INTEGER
-			-- `branch_count'.
-		do
-			across
-				ecf_libraries as ic_ecf
-			loop
-				if ic_ecf.item.is_branch then
-					Result := Result + 1
-				end
-			end
-		end
+--	branch_count: INTEGER
+--			-- `branch_count'.
+--		do
+--			across
+--				ecf_libraries as ic_ecf
+--			loop
+--				if ic_ecf.item.is_branch then
+--					Result := Result + 1
+--				end
+--			end
+--		end
 
-	leaf_count: INTEGER
-			-- `leaf_count'.
-		do
-			across
-				ecf_libraries as ic_ecf
-			loop
-				if ic_ecf.item.is_leaf then
-					Result := Result + 1
-				end
-			end
-		end
+--	leaf_count: INTEGER
+--			-- `leaf_count'.
+--		do
+--			across
+--				ecf_libraries as ic_ecf
+--			loop
+--				if ic_ecf.item.is_leaf then
+--					Result := Result + 1
+--				end
+--			end
+--		end
 
 feature -- Basic Operations
 
@@ -203,6 +191,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_is_computed_uuid: BOOLEAN
 			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING]
 			seeding_integer: INTEGER
+			l_ecf: IG_ECF_CLIENT_SUPPLIER
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make
@@ -222,35 +211,44 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				from
 					seeding_integer := l_callbacks.libraries.count
 					create l_ecf_library_dependencies.make (l_callbacks.libraries.count)
-				invariant
-					l_ecf_library_dependencies.count = l_callbacks.libraries.count - seeding_integer
+--				invariant
+--					l_ecf_library_dependencies.count = l_callbacks.libraries.count - seeding_integer
 				loop
-					l_ecf_library_dependencies.put ([ic_libs.item.name,
-														ic_libs.item.location,
-														ic_libs.item.uuid,
-														ic_libs.item.is_github,
-														ic_libs.item.is_ise,
-														ic_libs.item.is_local,
-														ic_libs.item.is_computed_uuid], seeding_integer.out)
+--					l_ecf_library_dependencies.put ([ic_libs.item.name,
+--														ic_libs.item.location,
+--														ic_libs.item.uuid,
+--														ic_libs.item.is_github,
+--														ic_libs.item.is_ise,
+--														ic_libs.item.is_local,
+--														ic_libs.item.is_computed_uuid], seeding_integer.out)
 					seeding_integer := seeding_integer - 1
 				variant
 					seeding_integer
 				end
 
-				check same_count: l_callbacks.libraries.count = l_ecf_library_dependencies.count end
+--				check same_count: l_callbacks.libraries.count = l_ecf_library_dependencies.count end
 
-				ecf_libraries.force ([l_callbacks.attached_system_name,
-										l_callbacks.targets,
-										l_callbacks.last_test_target,
-										l_ecf_library_dependencies.twin,
-										l_is_computed_uuid,
-										a_last_git_path,
-										a_last_git_config_path,
-										False,
-										False,
-										False,
-										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity),
-										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity)], l_uuid.out)
+				create l_ecf
+				l_ecf.name.set_item (l_callbacks.attached_system_name)
+				l_ecf.path.set_item (a_last_ecf_path)
+--				across
+--					 as
+--				loop
+--					
+--				end
+
+--				ecf_libraries.force ([l_callbacks.attached_system_name,
+--										l_callbacks.targets,
+--										l_callbacks.last_test_target,
+--										l_ecf_library_dependencies.twin,
+--										l_is_computed_uuid,
+--										a_last_git_path,
+--										a_last_git_config_path,
+--										False,
+--										False,
+--										False,
+--										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity),
+--										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity)], l_uuid.out)
 			end
 		end
 
@@ -290,7 +288,6 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			term: "Leaf ECF", "An ECF with only Client, but no Supplier $GITHUB-based ECFs."
 		do
 			build_clients_list
-			scan_and_mark
 		end
 
 	build_clients_list
@@ -300,57 +297,10 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				ecf_libraries as ic_client
 			loop
 				across
-					ic_client.item.supplier_libraries as ic_supplier
+					ecf_libraries as ic_supplier
 				loop
-					if attached ic_supplier.item.uuid as al_supplier_uuid then
---						add_supplier_to_client (ic_client.item.system_name, ic_client.key, al_supplier_uuid)
-						add_supplier_to_client (ic_supplier.item.name, al_supplier_uuid, ic_client.key)
-					else
-						do_nothing -- non-attached = not GITHUB
-					end
+					ic_supplier.item.set_possible_client (ic_client.item)
 				end
-			end
-		end
-
-	add_supplier_to_client (a_supplier_name, a_supplier_uuid, a_client_uuid: READABLE_STRING_32)
-			-- `add_supplier_to_client' with `a_client' and `a_supplier' in `ecf_libraries' `suppliers' list.
-		do
-			check has_client: attached ecf_libraries.item (a_client_uuid) as al_client then
-				al_client.suppliers.force (a_supplier_name, a_supplier_uuid)
-			end
-		end
-
-	scan_and_mark
-			-- `scan_and_mark'.
-		note
-			design: "[
-				Each `ecf_libraries' item ought to now have a `clients' and `suppliers' list
-				developed for them. So, finding those items with both some `clients' and
-				some `suppliers' indicates a "branch".
-				]"
-		do
-			across
-				ecf_libraries as ic_ecf_libs
-			loop
-				ic_ecf_libs.item.is_branch := (ic_ecf_libs.item.clients.count > 0 and ic_ecf_libs.item.suppliers.count > 0)
-				ic_ecf_libs.item.is_leaf := (ic_ecf_libs.item.clients.count = 0 and ic_ecf_libs.item.suppliers.count > 0)
-				ic_ecf_libs.item.is_trunk := (ic_ecf_libs.item.clients.count = 0 and ic_ecf_libs.item.suppliers.count = 0)
-					-- Logging ...
-				logger.write_information ("--------------------------------")
-				logger.write_information ("%T%T%T" + ic_ecf_libs.item.system_name)
-				logger.write_information ("Clients:")
-				across
-					ic_ecf_libs.item.clients as ic_clients
-				loop
-					logger.write_information ("%T%T%T" + ic_clients.item)
-				end
-				logger.write_information ("Suppliers")
-				across
-					ic_ecf_libs.item.suppliers as ic_suppliers
-				loop
-					logger.write_information ("%T%T%T" + ic_suppliers.item)
-				end
-				logger.write_information ("--------------------------------")
 			end
 		end
 
