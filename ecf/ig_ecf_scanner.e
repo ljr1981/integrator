@@ -56,41 +56,41 @@ feature -- Access
 
 feature -- Status Report
 
---	trunk_count: INTEGER
---			-- `trunk_count'.
---		do
---			across
---				ecf_libraries as ic_ecf
---			loop
---				if ic_ecf.item.is_trunk then
---					Result := Result + 1
---				end
---			end
---		end
+	trunk_count: INTEGER
+			-- `trunk_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if not ic_ecf.item.is_leaf and not ic_ecf.item.is_branch then
+					Result := Result + 1
+				end
+			end
+		end
 
---	branch_count: INTEGER
---			-- `branch_count'.
---		do
---			across
---				ecf_libraries as ic_ecf
---			loop
---				if ic_ecf.item.is_branch then
---					Result := Result + 1
---				end
---			end
---		end
+	branch_count: INTEGER
+			-- `branch_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if ic_ecf.item.is_branch then
+					Result := Result + 1
+				end
+			end
+		end
 
---	leaf_count: INTEGER
---			-- `leaf_count'.
---		do
---			across
---				ecf_libraries as ic_ecf
---			loop
---				if ic_ecf.item.is_leaf then
---					Result := Result + 1
---				end
---			end
---		end
+	leaf_count: INTEGER
+			-- `leaf_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if ic_ecf.item.is_leaf and not ic_ecf.item.is_branch then
+					Result := Result + 1
+				end
+			end
+		end
 
 feature -- Basic Operations
 
@@ -116,9 +116,11 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 				if al_ext.same_string (ecf_extension_string) then
 					process_ecf (a_path)
 				end
-			elseif a_path.name.has_substring (dot_git_string) or a_path.name.has_substring (dot_gitignore_string) then
-				do_nothing -- .git is ignored.
-			elseif a_path.name.has_substring (git_config_string) then
+			elseif a_path.name.has_substring (Dot_git_string) then
+				do_nothing -- .git is ignored
+			elseif a_path.name.has_substring (Dot_gitignore_string) then
+				do_nothing -- .gitignore is ignored.
+			elseif a_path.name.has_substring (Git_config_string) then
 				do_nothing -- git config's are ignored.
 			elseif a_path.name.has_substring (EIFGENs_string) then
 				do_nothing -- EIFGENs are ignored.
@@ -152,7 +154,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			until
 				l_has_git
 			loop
-				if ic_parent_entries.item.name.has_substring (dot_git_string) and then not ic_parent_entries.item.name.has_substring (Dot_gitignore_string) then
+				if ic_parent_entries.item.name.has_substring (Dot_git_string) and then not ic_parent_entries.item.name.has_substring (Dot_gitignore_string) then
 					create l_git_path.make_from_string (l_parent.name.out + a_path.directory_separator.out + ic_parent_entries.item.name.out)
 					l_has_git := attached l_git_path
 					if l_has_git and then attached l_git_path then
@@ -191,64 +193,21 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_is_computed_uuid: BOOLEAN
 			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING]
 			seeding_integer: INTEGER
-			l_ecf: IG_ECF_CLIENT_SUPPLIER
+			l_ecf: detachable IG_ECF_CLIENT_SUPPLIER
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make
 			l_parser.set_callbacks (l_callbacks)
 			l_parser.parse_from_path (a_last_ecf_path)
-
-			if attached l_callbacks.last_system_name then
-				if attached l_callbacks.last_uuid as al_uuid_string and then (create {UUID}).is_valid_uuid (al_uuid_string) then
-					l_uuid := create {UUID}.make_from_string (al_uuid_string)
-					l_is_computed_uuid := False
-				else
-					l_uuid := (create {RANDOMIZER}).uuid
-					l_is_computed_uuid := True
+				-- See if we have an ECF ...
+			if attached l_callbacks.ecf_client_supplier as al_ecf then
+				if attached a_last_git_path as al_path then
+					al_ecf.set_github_path (al_path)
 				end
-				across
-					l_callbacks.libraries as ic_libs
-				from
-					seeding_integer := l_callbacks.libraries.count
-					create l_ecf_library_dependencies.make (l_callbacks.libraries.count)
---				invariant
---					l_ecf_library_dependencies.count = l_callbacks.libraries.count - seeding_integer
-				loop
---					l_ecf_library_dependencies.put ([ic_libs.item.name,
---														ic_libs.item.location,
---														ic_libs.item.uuid,
---														ic_libs.item.is_github,
---														ic_libs.item.is_ise,
---														ic_libs.item.is_local,
---														ic_libs.item.is_computed_uuid], seeding_integer.out)
-					seeding_integer := seeding_integer - 1
-				variant
-					seeding_integer
+				if attached a_last_git_config_path as al_path then
+					al_ecf.set_github_config_path (al_path)
 				end
-
---				check same_count: l_callbacks.libraries.count = l_ecf_library_dependencies.count end
-
-				create l_ecf
-				l_ecf.name.set_item (l_callbacks.attached_system_name)
-				l_ecf.path.set_item (a_last_ecf_path)
---				across
---					 as
---				loop
---					
---				end
-
---				ecf_libraries.force ([l_callbacks.attached_system_name,
---										l_callbacks.targets,
---										l_callbacks.last_test_target,
---										l_ecf_library_dependencies.twin,
---										l_is_computed_uuid,
---										a_last_git_path,
---										a_last_git_config_path,
---										False,
---										False,
---										False,
---										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity),
---										create {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]}.make (Default_client_supplier_list_capacity)], l_uuid.out)
+				ecf_libraries.force (al_ecf, al_ecf.uuid.out)
 			end
 		end
 
@@ -265,15 +224,15 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				table reveals:
 				
 				(1) A "$GITHUB" ECF dependency = NOT Trunk (e.g. Branch or Leaf)
-					So--mark each `ecf_libraries' item with `is_trunk' as False,
+					So--mark each `ecf_libraries' item with `has_github_suppliers' as False,
 					otherwise--True.
-				(2) For each ECF in `ecf_libraries', scan for those that are: not `is_trunk'.
+				(2) For each ECF in `ecf_libraries', scan for those that are: not `has_github_suppliers'.
 					Each of the not-trunk libraries can then have its UUID scanned for in the
 					`library_dependencies' of the other ECF not-trunk libraries.
 					ECFs that DO HAVE "my" UUID in their `library_dependencies' list
 					means that "I" am an `is_branch' and not `is_leaf'.
 				(3) At the end of the two cycles above, our `ecf_libraries' list will
-					have data of: `is_trunk', `is_branch', and `is_leaf' that represents
+					have data of: `has_github_suppliers', `is_branch', and `is_leaf' that represents
 					the relative position of the ECF in the heirarchy.
 				(4) Moreover, each `ecf_libraries' item ought to have a list of:
 					
@@ -281,7 +240,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 						(4b) $GITHUB Client ECF libraries
 					
 					These lists can be validated (contracted/tested) against the
-					flags: `is_trunk', `is_branch', and `is_leaf'.
+					flags: `has_github_suppliers', `is_branch', and `is_leaf'.
 				]"
 			term: "Trunk ECF", "An ECF with only Supplier, but no Client $GITHUB-based ECFs."
 			term: "Branch ECF", "An ECF with both Supplier and Client $GITHUB-based ECFs."

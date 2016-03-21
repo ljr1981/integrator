@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-feature -- Events
+feature {NONE} -- Implementation: Events
 
 	on_start_tag (a_namespace, a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- <Precursor>
@@ -50,7 +50,7 @@ feature -- Events
 				if attached last_library_name as al_name and then attached last_library_location as al_location then
 					last_is_github := al_location.has_substring (github_tag_string)
 					last_is_ise := al_location.has_substring (ise_library_tag_string) or al_location.has_substring (ise_eiffel_tag_string)
-					libraries.force ([al_name, al_location, location_ecf_xml_uuid (al_location), last_is_github, last_is_ise, not (last_is_github or last_is_ise), not attached last_uuid])
+					suppliers.force ([al_name, al_location, location_ecf_xml_uuid (al_location), last_is_github, last_is_ise, not (last_is_github or last_is_ise), not attached last_uuid])
 					if al_name.same_string (testing_library_name_string) then
 						last_test_target := last_target_name
 					end
@@ -99,7 +99,50 @@ feature -- Events
 			end
 		end
 
-feature -- Data
+feature -- Access
+
+	ecf_client_supplier: detachable IG_ECF_CLIENT_SUPPLIER
+		local
+			l_supplier: IG_ECF_CLIENT_SUPPLIER
+		do
+			-- Pull in data (post-parse) from all the "data" below
+			if attached last_uuid as al_uuid and then (create {UUID}).is_valid_uuid (al_uuid) then
+				create Result
+				Result.set_uuid (create {UUID}.make_from_string (al_uuid))
+				check attached last_system_name as al_item then
+					Result.set_name (al_item)
+				end
+				if descriptions.count > 0 and then attached descriptions [1] as al_item then
+					Result.set_description (al_item)
+				end
+				if attached last_path as al_item then
+					Result.set_path (al_item)
+					if attached (create {PATH}.make_from_string (al_item.name + "\.git")) as al_git_path and then (create {DIRECTORY}.make_with_path (al_git_path)).exists then
+						Result.set_github_path (al_git_path)
+					end
+					if attached (create {PATH}.make_from_string (al_item.name + "\.git\config")) as al_git_config_path and then (create {DIRECTORY}.make_with_path (al_git_config_path)).exists then
+						Result.set_github_path (al_git_config_path)
+					end
+				end
+				-- Suppliers
+				across
+					suppliers as ic_suppliers
+				loop
+					if ic_suppliers.item.is_github then
+						create l_supplier
+						l_supplier.set_name (ic_suppliers.item.name)
+						if attached ic_suppliers.item.uuid as al_uuid_string then
+							l_supplier.set_uuid (create {UUID}.make_from_string (al_uuid_string))
+						end
+						l_supplier.set_description ("From_ECF_libraries_list")
+						l_supplier.set_path (create {PATH}.make_from_string (ic_suppliers.item.location))
+						Result.suppliers.force (l_supplier, l_supplier.uuid.out)
+						l_supplier.clients.force (Result, Result.uuid.out)
+						l_supplier.set_possible_client (Result)
+					end
+				end
+			end
+		end
 
 		-- Each <start_tag> encountered fills these ...
 	last_start_tag_namespace: detachable READABLE_STRING_32
@@ -136,8 +179,8 @@ feature -- Data
 	last_is_github: BOOLEAN								-- Is the library a $GITHUB library?
 	last_is_ise: BOOLEAN								-- Is the library an $ISE_LIBRARY?
 
-	libraries: ARRAYED_LIST [TUPLE [name, location: READABLE_STRING_32; uuid: detachable READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]]
-			-- `libraries' from Current XML.
+	suppliers: ARRAYED_LIST [TUPLE [name, location: READABLE_STRING_32; uuid: detachable READABLE_STRING_32; is_github, is_ise, is_local, is_computed_uuid: BOOLEAN]]
+			-- `suppliers' from Current XML.
 		attribute
 			create Result.make (100)
 		end

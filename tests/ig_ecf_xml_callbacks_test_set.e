@@ -18,6 +18,31 @@ inherit
 
 feature -- Test routines
 
+	sample_ecf_tests_2
+		local
+			l_callbacks: IG_ECF_XML_CALLBACKS
+			l_factory: XML_LITE_PARSER_FACTORY
+			l_parser: XML_LITE_PARSER
+			l_count: INTEGER
+			l_ecf_client_supplier: detachable IG_ECF_CLIENT_SUPPLIER
+		do
+			create l_callbacks.make
+			create l_factory
+			l_parser := l_factory.new_parser
+			l_parser.set_callbacks (l_callbacks)
+			l_parser.parse_from_string (sample_ecf)
+			l_ecf_client_supplier := l_callbacks.ecf_client_supplier
+
+			if attached l_ecf_client_supplier as al_ecf then
+					-- System Name, UUID, Description
+				assert_strings_equal ("system_name", "integrator", al_ecf.name)
+				if attached al_ecf.uuid.out as al_item then
+					assert_strings_equal ("system_uuid", "4044DD19-B545-FAE6-1541-00005FD08DC5", al_item)
+				end
+				assert_strings_equal ("descritption_name", "integrator implementation", al_ecf.description)
+			end
+		end
+
 	sample_ecf_tests
 			-- `sample_ecf_tests'
 		local
@@ -54,12 +79,12 @@ feature -- Test routines
 			assert_strings_equal ("last_target", "test", l_callbacks.targets [l_callbacks.targets.count])
 
 				-- Libraries (ISE, GITHUB, local)
-			assert_integers_equal ("library_count", 15, l_callbacks.libraries.count)
-			across l_callbacks.libraries as ic_libs from l_count := 0 loop
+			assert_integers_equal ("library_count", 15, l_callbacks.suppliers.count)
+			across l_callbacks.suppliers as ic_libs from l_count := 0 loop
 				l_count := l_count + ic_libs.item.is_github.to_integer
 			end
 			assert_integers_equal ("has_5_githubs", 5, l_count)
-			across l_callbacks.libraries as ic_libs from l_count := 0 loop
+			across l_callbacks.suppliers as ic_libs from l_count := 0 loop
 				l_count := l_count + ic_libs.item.is_ise.to_integer
 			end
 			assert_integers_equal ("has_10_githubs", 10, l_count)
@@ -102,28 +127,28 @@ feature -- Test routines
 			assert_strings_equal ("last_target", "test", l_callbacks.targets [l_callbacks.targets.count])
 
 				-- Libraries (ISE, GITHUB, local)
-			assert_integers_equal ("library_count", 11, l_callbacks.libraries.count)
+			assert_integers_equal ("library_count", 11, l_callbacks.suppliers.count)
 
 				-- Check the github counts ...
-			across l_callbacks.libraries as ic_libs from l_count := 0 loop
+			across l_callbacks.suppliers as ic_libs from l_count := 0 loop
 				l_count := l_count + ic_libs.item.is_github.to_integer
 			end
 			assert_integers_equal ("has_githubs", 5, l_count)
 
 				-- Check the ISE counts ...
-			across l_callbacks.libraries as ic_libs from l_count := 0 loop
+			across l_callbacks.suppliers as ic_libs from l_count := 0 loop
 				l_count := l_count + ic_libs.item.is_ise.to_integer
 			end
 			assert_integers_equal ("has_ises", 6, l_count)
 
 				-- Check the local counts ...
-			across l_callbacks.libraries as ic_libs from l_count := 0 loop
+			across l_callbacks.suppliers as ic_libs from l_count := 0 loop
 				l_count := l_count + ic_libs.item.is_local.to_integer
 			end
 			assert_integers_equal ("has_locals", 0, l_count)
 
 				-- Ensure there is nothing listed as local, but also github or ise ...
-			across l_callbacks.libraries as ic_libs from l_count := 0 loop
+			across l_callbacks.suppliers as ic_libs from l_count := 0 loop
 				l_count := l_count + (ic_libs.item.is_local and not (ic_libs.item.is_github or ic_libs.item.is_ise)).to_integer
 			end
 			assert_integers_equal ("has_0_conflicting", 0, l_count)

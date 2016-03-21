@@ -107,39 +107,39 @@ Suppliers:
 	mock_leaf: IG_ECF_CLIENT_SUPPLIER
 		once
 			create Result
-			Result.name.set_item ("ecf_leaf")
-			Result.path.set_item (create {PATH}.make_from_string ("$GITHUB\ecf_leaf"))
-			Result.uuid.set_item (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0001"))
-			Result.suppliers.set_item (supplier_list_1)
+			Result.set_name ("ecf_leaf")
+			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_leaf"))
+			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0001"))
+			across supplier_list_1 as ic_list loop Result.suppliers.force (ic_list.item, ic_list.item.uuid.out) end
 		end
 
 	mock_branch: IG_ECF_CLIENT_SUPPLIER
 		once
 			create Result
-			Result.name.set_item ("ecf_branch")
-			Result.path.set_item (create {PATH}.make_from_string ("$GITHUB\ecf_branch"))
-			Result.uuid.set_item (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0002"))
-			Result.suppliers.set_item (supplier_list_2)
+			Result.set_name ("ecf_branch")
+			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_branch"))
+			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0002"))
+			across supplier_list_2 as ic_list loop Result.suppliers.force (ic_list.item, ic_list.item.uuid.out) end
 		end
 
 	mock_trunk: IG_ECF_CLIENT_SUPPLIER
 		once
 			create Result
-			Result.name.set_item ("ecf_trunk")
-			Result.path.set_item (create {PATH}.make_from_string ("$GITHUB\ecf_trunk"))
-			Result.uuid.set_item (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0003"))
+			Result.set_name ("ecf_trunk")
+			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_trunk"))
+			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0003"))
 		end
 
 	supplier_list_1: attached like {IG_ECF_CLIENT_SUPPLIER}.list_anchor
 		once
 			create Result.make (1)
-			Result.force (mock_branch, mock_branch.uuid.attached_item)
+			Result.force (mock_branch, mock_branch.uuid.out)
 		end
 
 	supplier_list_2: attached like {IG_ECF_CLIENT_SUPPLIER}.list_anchor
 		once
 			create Result.make (1)
-			Result.force (mock_trunk, mock_trunk.uuid.attached_item)
+			Result.force (mock_trunk, mock_trunk.uuid.out)
 		end
 
 end
