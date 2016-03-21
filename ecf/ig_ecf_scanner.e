@@ -56,6 +56,25 @@ feature -- Access
 
 feature -- Status Report
 
+	github_count: INTEGER
+			-- `github_count'.
+		do
+			across
+				ecf_libraries as ic_ecf
+			loop
+				if ic_ecf.item.is_github_based then
+					Result := Result + 1
+				end
+			end
+		end
+
+	github_trunk_count: INTEGER
+		do
+			Result := github_count - (branch_count + leaf_count)
+		ensure
+			positive: Result >= 0
+		end
+
 	trunk_count: INTEGER
 			-- `trunk_count'.
 		do
@@ -201,11 +220,11 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_parser.parse_from_path (a_last_ecf_path)
 				-- See if we have an ECF ...
 			if attached l_callbacks.ecf_client_supplier as al_ecf then
-				if attached a_last_git_path as al_path then
-					al_ecf.set_github_path (al_path)
+				if attached a_last_git_path then
+					al_ecf.set_github_path (a_last_git_path)
 				end
-				if attached a_last_git_config_path as al_path then
-					al_ecf.set_github_config_path (al_path)
+				if attached a_last_git_config_path then
+					al_ecf.set_github_config_path (a_last_git_config_path)
 				end
 				ecf_libraries.force (al_ecf, al_ecf.uuid.out)
 			end

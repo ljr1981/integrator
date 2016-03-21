@@ -36,17 +36,17 @@ feature -- Test routines
 	integrator_basic_tests
 			-- `integrator_basic_tests'
 		local
-			l_projects: IG_ECF_SCANNER
-			l_github_count,
-			l_config_count: INTEGER
+			l_scanner: IG_ECF_SCANNER
 		do
-			create l_projects
-			l_projects.scan_github
-			assert_integers_equal ("has_120_you_may_have_more_or_less", 120, l_projects.ecf_libraries.count)
-			assert_integers_equal ("has_7_branches", 7, l_projects.branch_count)
-			assert_integers_equal ("has_14_leaves", 14, l_projects.leaf_count)
-			assert_integers_equal ("has_99_trunks", 99, l_projects.trunk_count)
-			assert_integers_equal ("branches_leaves_trunks_counts_are_ecf_libraries_count", l_projects.ecf_libraries.count, l_projects.trunk_count + l_projects.branch_count + l_projects.leaf_count)
+			create l_scanner
+			l_scanner.scan_github
+			assert_integers_equal ("has_120_you_may_have_more_or_less", 120, l_scanner.ecf_libraries.count)
+			assert_integers_equal ("has_7_branches", 7, l_scanner.branch_count)
+			assert_integers_equal ("has_14_leaves", 14, l_scanner.leaf_count)
+			assert_integers_equal ("has_99_trunks", 99, l_scanner.trunk_count)
+			assert_integers_equal ("branches_leaves_trunks_counts_are_ecf_libraries_count", l_scanner.ecf_libraries.count, l_scanner.trunk_count + l_scanner.branch_count + l_scanner.leaf_count)
+			assert_integers_equal ("has_21_github_based_ecfs", 21, l_scanner.github_count)
+			assert_integers_equal ("has_0_github_trunks", 0, l_scanner.github_trunk_count)
 --			across
 --				l_projects.ecf_libraries as ic_ecf
 --			loop

@@ -66,7 +66,6 @@ feature {NONE} -- Implementation: Events
 	location_ecf_xml_uuid (a_location: STRING): detachable READABLE_STRING_32
 		local
 			l_callbacks: IG_ECF_XML_CALLBACKS
-			l_factory: XML_LITE_PARSER_FACTORY
 			l_parser: XML_LITE_PARSER
 			l_file: PLAIN_TEXT_FILE
 			l_file_name,
@@ -74,8 +73,7 @@ feature {NONE} -- Implementation: Events
 		do
 			if last_is_github then
 				create l_callbacks.make
-				create l_factory
-				l_parser := l_factory.new_parser
+				l_parser := (create {XML_LITE_PARSER_FACTORY}).new_parser
 				l_parser.set_callbacks (l_callbacks)
 				l_file_name := a_location.twin
 				l_file_name.replace_substring_all (Github_tag_string, Github_path_string)

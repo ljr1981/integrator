@@ -123,16 +123,16 @@ feature -- Settings
 		local
 			l_uuid: STRING
 		do
-			if attached uuid as al_supplier_uuid and then attached al_supplier_uuid.out as al_supplier_uuid_string then
-				if attached a_possible_client.suppliers as al_possible_client_suppliers then
-					across
-						al_possible_client_suppliers as ic_possible_client_suppliers
-					loop
-						if attached ic_possible_client_suppliers.item.uuid as al_possible_client_suppliers_uuid then
-							if al_possible_client_suppliers_uuid.out.same_string (al_supplier_uuid_string) then
-								clients.force (a_possible_client, a_possible_client.uuid.out)
-							end
-						end
+			if attached uuid as al_supplier_uuid and then attached al_supplier_uuid.out as al_supplier_uuid_string and then
+				attached a_possible_client.suppliers as al_possible_client_suppliers
+			then
+				across
+					al_possible_client_suppliers as ic_possible_client_suppliers
+				loop
+					if attached ic_possible_client_suppliers.item.uuid as al_possible_client_suppliers_uuid and then
+						al_possible_client_suppliers_uuid.out.same_string (al_supplier_uuid_string)
+					then
+						clients.force (a_possible_client, a_possible_client.uuid.out)
 					end
 				end
 			end

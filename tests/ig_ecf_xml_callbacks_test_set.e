@@ -21,25 +21,23 @@ feature -- Test routines
 	sample_ecf_tests_2
 		local
 			l_callbacks: IG_ECF_XML_CALLBACKS
-			l_factory: XML_LITE_PARSER_FACTORY
 			l_parser: XML_LITE_PARSER
 			l_count: INTEGER
 			l_ecf_client_supplier: detachable IG_ECF_CLIENT_SUPPLIER
 		do
 			create l_callbacks.make
-			create l_factory
-			l_parser := l_factory.new_parser
+			l_parser := (create {XML_LITE_PARSER_FACTORY}).new_parser
 			l_parser.set_callbacks (l_callbacks)
 			l_parser.parse_from_string (sample_ecf)
 			l_ecf_client_supplier := l_callbacks.ecf_client_supplier
 
-			if attached l_ecf_client_supplier as al_ecf then
+			if attached l_ecf_client_supplier then
 					-- System Name, UUID, Description
-				assert_strings_equal ("system_name", "integrator", al_ecf.name)
-				if attached al_ecf.uuid.out as al_item then
+				assert_strings_equal ("system_name", "integrator", l_ecf_client_supplier.name)
+				if attached l_ecf_client_supplier.uuid.out as al_item then
 					assert_strings_equal ("system_uuid", "4044DD19-B545-FAE6-1541-00005FD08DC5", al_item)
 				end
-				assert_strings_equal ("descritption_name", "integrator implementation", al_ecf.description)
+				assert_strings_equal ("descritption_name", "integrator implementation", l_ecf_client_supplier.description)
 			end
 		end
 
@@ -47,13 +45,11 @@ feature -- Test routines
 			-- `sample_ecf_tests'
 		local
 			l_callbacks: IG_ECF_XML_CALLBACKS
-			l_factory: XML_LITE_PARSER_FACTORY
 			l_parser: XML_LITE_PARSER
 			l_count: INTEGER
 		do
 			create l_callbacks.make
-			create l_factory
-			l_parser := l_factory.new_parser
+			l_parser := (create {XML_LITE_PARSER_FACTORY}).new_parser
 			l_parser.set_callbacks (l_callbacks)
 			l_parser.parse_from_string (sample_ecf)
 
@@ -94,13 +90,11 @@ feature -- Test routines
 			-- `sample_class_attribute_ecf_tests'
 		local
 			l_callbacks: IG_ECF_XML_CALLBACKS
-			l_factory: XML_LITE_PARSER_FACTORY
 			l_parser: XML_LITE_PARSER
 			l_count: INTEGER
 		do
 			create l_callbacks.make
-			create l_factory
-			l_parser := l_factory.new_parser
+			l_parser := (create {XML_LITE_PARSER_FACTORY}).new_parser
 			l_parser.set_callbacks (l_callbacks)
 			l_parser.parse_from_string (sample_class_attribute_ecf)
 
