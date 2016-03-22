@@ -7,7 +7,7 @@ class
 	IG_ECF
 
 inherit
-	ANY
+	IG_ANY
 		redefine
 			out
 		end
@@ -26,7 +26,7 @@ feature -- Access
 			create Result.make_empty
 		end
 
-	path:  PATH
+	path: PATH
 			-- `ecf_path' to `ecf_name' of Current {IG_ECF}.
 		attribute
 			create Result.make_empty
@@ -67,6 +67,12 @@ feature -- Access
 			design: "[
 				These are loaded from the ECF XML specification.
 				]"
+		attribute
+			create Result.make (10)
+		end
+
+	targets: ARRAYED_LIST [STRING]
+			-- `targets' found in Current {IG_ECF}.
 		attribute
 			create Result.make (10)
 		end
@@ -172,6 +178,79 @@ feature -- Status Report
 			-- `is_branch'?
 		do
 			Result := is_github_based and then (has_github_suppliers and not has_github_clients)
+		end
+
+feature -- Basic Operations
+
+	compile
+			-- `compile' F7.
+		local
+			l_cmd: PLAIN_TEXT_FILE
+			l_cmd_line: STRING
+			l_process_factory: PROCESS_FACTORY
+			l_process: PROCESS
+		do
+--			create l_cmd_line.make_empty
+--			l_cmd_line.append_string ("cd " + path.name + "%N")
+--			l_cmd_line.append_string ("del eifgens /F /Q%N")
+--			l_cmd_line.append_string ("rmdir eifgens /S /Q%N")
+--			l_cmd_line.append_string ("git pull%N")
+--			across
+--				targets as ic_targets
+--			loop
+--				l_cmd_line.append_string ("ec -config " + name + ".ecf -target " + ic_targets.item + "%N")
+--				l_cmd_line.append_string ("cd " + path.name + "\EIFGENs\" + ic_targets.item + "\W_code%N")
+--				l_cmd_line.append_string ("finish_freezing%N")
+--				l_cmd_line.append_string ("cd " + path.name + "%N")
+--			end
+--			l_cmd_line.append_string ("dir%N")
+
+--			create l_cmd.make_create_read_write (path.name + "\compile_" + name + ".cmd")
+--			l_cmd.put_string (l_cmd_line.out)
+--			l_cmd.flush
+--			l_cmd.close
+
+--			create l_process_factory
+--			l_process := l_process_factory.process_launcher_with_command_line (path.name + "\compile_" + name + ".cmd", path.name)
+--			l_process.set_hidden (True)
+--			l_process.set_separate_console (False)
+--			l_process.set_detached_console (False)
+--			l_process.redirect_error_to_file ("compile_error_out.txt")
+--			l_process.redirect_output_to_file ("compile_out.txt")
+--			l_process.set_on_successful_launch_handler (agent do append_to_pending_output (name + " launched successfully!"); on_exit end)
+--			l_process.set_on_fail_launch_handler (agent do append_to_pending_output (name + " failed to launch!"); on_exit end)
+--			l_process.set_on_exit_handler (agent on_exit)
+--			l_process.set_on_terminate_handler (agent on_exit)
+--			l_process.set_on_start_handler (agent append_to_pending_output (name + "started!"))
+--			l_process.launch
+		end
+
+	pending_output: STRING attribute create Result.make_empty end
+	append_to_pending_output (a_text: STRING) do pending_output.append_string ("Text: " + a_text) end
+	on_exit do pending_output.append_string ("%NExit.") end
+
+	find_added_classes_and_recompile
+			-- `find_added_classes_and_recompile' Alt + F8.
+		do
+			do_nothing -- yet ...
+		end
+
+	recompile_overrides
+			-- `recompile_overrides' Shift + F8.
+		do
+			do_nothing -- yet ...
+		end
+
+	freeze (a_target: STRING)
+			-- `freeze' Ctrl + F7.
+		do
+			do_nothing -- yet ...
+		end
+
+	finalize
+			-- `finalize' Ctrl + Shift + F7.
+		do
+			do_nothing -- yet ...
 		end
 
 feature -- Outputs

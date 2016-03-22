@@ -88,6 +88,17 @@ feature -- Basic Operations
 			identify_ecf_dependencies
 		end
 
+	output_compile_cmd
+		do
+			across
+				ecf_libraries as ic_ecfs
+			loop
+				if ic_ecfs.item.is_github_based then
+					ic_ecfs.item.compile
+				end
+			end
+		end
+
 feature {NONE} -- Implementation: Basic Operations: Scanning
 
 	scan_path (a_path: PATH; a_level: INTEGER)
@@ -188,11 +199,17 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_parser.parse_from_path (a_last_ecf_path)
 				-- See if we have an ECF ...
 			if attached l_callbacks.ecf_client_supplier as al_ecf then
+				al_ecf.set_path (a_last_ecf_path.parent)
 				if attached a_last_git_path then
 					al_ecf.set_github_path (a_last_git_path)
 				end
 				if attached a_last_git_config_path then
 					al_ecf.set_github_config_path (a_last_git_config_path)
+				end
+				across
+					l_callbacks.targets as ic_targets
+				loop
+					al_ecf.targets.force (ic_targets.item)
 				end
 				ecf_libraries.force (al_ecf, al_ecf.uuid.out)
 			end

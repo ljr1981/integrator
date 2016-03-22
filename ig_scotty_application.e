@@ -22,7 +22,11 @@ feature {NONE} -- Initialization
 			l_scanner: IG_ECF_SCANNER
 			l_ecf: IG_ECF
 		do
-
+			create l_scanner
+			print ("scanning ...%N")
+			l_scanner.scan_github
+			print ("building `comiple.cmd' outputs for each path%N")
+			l_scanner.output_compile_cmd
 		end
 
 end

@@ -1,9 +1,9 @@
 note
-	description: "Tests of {IG_ECF_CLIENT_SUPPLIER}."
+	description: "Tests of {IG_ECF}."
 	testing: "type/manual"
 
 class
-	IG_ECF_CLIENT_SUPPLIER_TEST_SET
+	IG_ECF_TEST_SET
 
 inherit
 	EQA_TEST_SET
@@ -46,7 +46,44 @@ feature -- Test routines
 			assert_strings_equal ("mock_trunk", mock_trunk_out, mock_trunk.out)
 		end
 
+	ig_ecf_compile_test
+			-- `ig_ecf_compile_test'.
+		note
+			testing: "execution/serial"
+		do
+			mock_for_compile.compile
+		end
+
+	ig_ecf_freeze_test
+			-- `ig_ecf_freeze_test'.
+		note
+			testing: "execution/serial"
+		do
+			mock_for_compile.freeze ("test")
+		end
+
 feature {NONE} -- Implementation: Mocks
+
+	mock_for_compile: IG_ECF
+			-- `mock_for_compile' tests.
+		do
+			Result := (create {IG_ECF_FACTORY}).new_ecf_from_file (mock_path)
+		end
+
+	mock_eifgens_directory: DIRECTORY
+		do
+			create Result.make_with_path (mock_eifgens_path)
+		end
+
+	mock_path: PATH
+		do
+			create Result.make_from_string (github_path.name + "\ig_test_project\ig_test_project.ecf")
+		end
+
+	mock_eifgens_path: PATH
+		do
+			create Result.make_from_string (mock_path.parent.name + "\EIFGENs")
+		end
 
 	mock_leaf_out: STRING = "[
 Name: ecf_leaf
