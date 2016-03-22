@@ -99,9 +99,9 @@ feature {NONE} -- Implementation: Events
 
 feature -- Access
 
-	ecf_client_supplier: detachable IG_ECF_CLIENT_SUPPLIER
+	ecf_client_supplier: detachable IG_ECF
 		local
-			l_supplier: IG_ECF_CLIENT_SUPPLIER
+			l_supplier: IG_ECF
 		do
 			-- Pull in data (post-parse) from all the "data" below
 			if attached last_uuid as al_uuid and then (create {UUID}).is_valid_uuid (al_uuid) then

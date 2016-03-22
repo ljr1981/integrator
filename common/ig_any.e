@@ -8,5 +8,7 @@ class
 
 inherit
 	LE_LOGGING_AWARE
-	
+
+	IG_DOCS
+
 end

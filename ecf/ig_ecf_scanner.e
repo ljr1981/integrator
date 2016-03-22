@@ -3,40 +3,8 @@ note
 		Representation of an {IG_ECF_SCANNER} controller.
 		]"
 	design: "[
-		For "Scotty", the {IG_ECF_SCANNER} controller has the purpose of:
-		
-		(1) Parse $GITHUB for ECF projects.
-		(2) Parse each ECF for Supplier ECF's (recursively)
-		(3) Build dependency list of ECF-to-ECF (use UUID to ID each ECF)
-		(4) ID each ECF as is_local_github and is_remote_github
-		(5) ID each ECF as is_testing_enabled
-		
-		Goal:
-		=====
-		Github_projects ::=
-			{Github_project}*
-			
-		Github_project ::=
-			UUID
-			Is_computed_UUID
-			System_name
-			Target_list
-			Test_target
-			Libraries
-			
-		Informative Text
-		----------------
-		(1) UUID: Every ECF (of interest) has a UUID. These ought to be unique.
-			They need to be tested for uniqueness because a human programmer can
-			(and in ignorance will) duplicate them by copy-and-paste.
-			("If you're copying-and-pasting you're already wrong" -- Bertrand Meyer)
-		(2) Is_computed_UUID: If the ECF does not have a UUID, one is provided by
-			computation. This is noted in this BOOLEAN flag and ought to be
-			checked to ensure that every ECF of interest has a UUID in the <system>
-			tag. Again--this is a "programmer discipline" matter, where the programmer
-			can (and sometimes will) forget to include an appropriate UUID for <system>.
+		See end-of-class notes.
 		]"
-	EIS: "src=$GITHUB/integrator/docs/Flow.png"
 
 class
 	IG_ECF_SCANNER
@@ -48,7 +16,7 @@ inherit
 
 feature -- Access
 
-	ecf_libraries: HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING]
+	ecf_libraries: HASH_TABLE [IG_ECF, STRING]
 			-- `ecf_libraries' list.
 		attribute
 			create Result.make (default_ecf_libraries_capacity)
@@ -212,7 +180,7 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_is_computed_uuid: BOOLEAN
 			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING]
 			seeding_integer: INTEGER
-			l_ecf: detachable IG_ECF_CLIENT_SUPPLIER
+			l_ecf: detachable IG_ECF
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make
@@ -295,5 +263,42 @@ feature {NONE} -- Implementation: Constants
 
 	Default_client_supplier_list_capacity: INTEGER = 500
 			-- `Default_client_supplier_list_capacity' is 500.
+
+note
+	design: "[
+		For "Scotty", the {IG_ECF_SCANNER} controller has the purpose of:
+
+		(1) Parse $GITHUB for ECF projects.
+		(2) Parse each ECF for Supplier ECF's (recursively)
+		(3) Build dependency list of ECF-to-ECF (use UUID to ID each ECF)
+		(4) ID each ECF as is_local_github and is_remote_github
+		(5) ID each ECF as is_testing_enabled
+
+		Goal:
+		=====
+		Github_projects ::=
+			{Github_project}*
+
+		Github_project ::=
+			UUID
+			Is_computed_UUID
+			System_name
+			Target_list
+			Test_target
+			Libraries
+
+		Informative Text
+		----------------
+		(1) UUID: Every ECF (of interest) has a UUID. These ought to be unique.
+			They need to be tested for uniqueness because a human programmer can
+			(and in ignorance will) duplicate them by copy-and-paste.
+			("If you're copying-and-pasting you're already wrong" -- Bertrand Meyer)
+		(2) Is_computed_UUID: If the ECF does not have a UUID, one is provided by
+			computation. This is noted in this BOOLEAN flag and ought to be
+			checked to ensure that every ECF of interest has a UUID in the <system>
+			tag. Again--this is a "programmer discipline" matter, where the programmer
+			can (and sometimes will) forget to include an appropriate UUID for <system>.
+		]"
+	EIS: "src=$GITHUB/integrator/docs/Flow.png"
 
 end

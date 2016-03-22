@@ -1,10 +1,5 @@
 note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
-	author: "EiffelStudio test wizard"
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Tests of {IG_ECF_CLIENT_SUPPLIER}."
 	testing: "type/manual"
 
 class
@@ -104,7 +99,7 @@ Suppliers:
 
 ]"
 
-	mock_leaf: IG_ECF_CLIENT_SUPPLIER
+	mock_leaf: IG_ECF
 		once
 			create Result
 			Result.set_name ("ecf_leaf")
@@ -113,7 +108,7 @@ Suppliers:
 			across supplier_list_1 as ic_list loop Result.suppliers.force (ic_list.item, ic_list.item.uuid.out) end
 		end
 
-	mock_branch: IG_ECF_CLIENT_SUPPLIER
+	mock_branch: IG_ECF
 		once
 			create Result
 			Result.set_name ("ecf_branch")
@@ -122,7 +117,7 @@ Suppliers:
 			across supplier_list_2 as ic_list loop Result.suppliers.force (ic_list.item, ic_list.item.uuid.out) end
 		end
 
-	mock_trunk: IG_ECF_CLIENT_SUPPLIER
+	mock_trunk: IG_ECF
 		once
 			create Result
 			Result.set_name ("ecf_trunk")
@@ -130,13 +125,13 @@ Suppliers:
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0003"))
 		end
 
-	supplier_list_1: attached like {IG_ECF_CLIENT_SUPPLIER}.list_anchor
+	supplier_list_1: attached like {IG_ECF}.list_anchor
 		once
 			create Result.make (1)
 			Result.force (mock_branch, mock_branch.uuid.out)
 		end
 
-	supplier_list_2: attached like {IG_ECF_CLIENT_SUPPLIER}.list_anchor
+	supplier_list_2: attached like {IG_ECF}.list_anchor
 		once
 			create Result.make (1)
 			Result.force (mock_trunk, mock_trunk.uuid.out)

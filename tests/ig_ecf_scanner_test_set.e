@@ -85,7 +85,7 @@ feature -- Test routines
 
 feature {NONE} -- Implementation: Constants
 
-	the_trunks (a_ecf_libraries: HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING_8]): STRING
+	the_trunks (a_ecf_libraries: HASH_TABLE [IG_ECF, STRING_8]): STRING
 		do
 			create Result.make_empty
 			across
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation: Constants
 			end
 		end
 
-	the_branches (a_ecf_libraries: HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING_8]): STRING
+	the_branches (a_ecf_libraries: HASH_TABLE [IG_ECF, STRING_8]): STRING
 		do
 			create Result.make_empty
 			across
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation: Constants
 			end
 		end
 
-	the_leaves (a_ecf_libraries: HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING_8]): STRING
+	the_leaves (a_ecf_libraries: HASH_TABLE [IG_ECF, STRING_8]): STRING
 		do
 			create Result.make_empty
 			across
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation: Constants
 			end
 		end
 
-	the_ninety_nine_calculated (a_ecf_libraries: HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING_8]): STRING
+	the_ninety_nine_calculated (a_ecf_libraries: HASH_TABLE [IG_ECF, STRING_8]): STRING
 		do
 			create Result.make_empty
 			across

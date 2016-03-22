@@ -23,7 +23,7 @@ feature -- Test routines
 			l_callbacks: IG_ECF_XML_CALLBACKS
 			l_parser: XML_LITE_PARSER
 			l_count: INTEGER
-			l_ecf_client_supplier: detachable IG_ECF_CLIENT_SUPPLIER
+			l_ecf_client_supplier: detachable IG_ECF
 		do
 			create l_callbacks.make
 			l_parser := (create {XML_LITE_PARSER_FACTORY}).new_parser

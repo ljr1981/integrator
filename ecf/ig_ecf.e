@@ -4,7 +4,7 @@ note
 		]"
 
 class
-	IG_ECF_CLIENT_SUPPLIER
+	IG_ECF
 
 inherit
 	ANY
@@ -15,43 +15,43 @@ inherit
 feature -- Access
 
 	name: STRING
-			-- `ecf_name' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `ecf_name' of Current {IG_ECF}.
 		attribute
 			create Result.make_empty
 		end
 
 	description: STRING
-			-- `description' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `description' of Current {IG_ECF}.
 		attribute
 			create Result.make_empty
 		end
 
 	path:  PATH
-			-- `ecf_path' to `ecf_name' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `ecf_path' to `ecf_name' of Current {IG_ECF}.
 		attribute
 			create Result.make_empty
 		end
 
 	github_path:  PATH
-			-- `github_path' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `github_path' of Current {IG_ECF}.
 		attribute
 			create Result.make_empty
 		end
 
 	github_config_path:  PATH
-			-- `github_config_path' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `github_config_path' of Current {IG_ECF}.
 		attribute
 			create Result.make_empty
 		end
 
 	uuid: UUID
-			-- `uuid' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `uuid' of Current {IG_ECF}.
 		attribute
 			create Result
 		end
 
 	clients: attached like list_anchor
-			-- `clients' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `clients' of Current {IG_ECF}.
 		note
 			design: "[
 				These are loaded by the `set_possible_client' feature
@@ -62,7 +62,7 @@ feature -- Access
 		end
 
 	suppliers: attached like list_anchor
-			-- `suppliers' of Current {IG_ECF_CLIENT_SUPPLIER}.
+			-- `suppliers' of Current {IG_ECF}.
 		note
 			design: "[
 				These are loaded from the ECF XML specification.
@@ -109,7 +109,7 @@ feature -- Settings
 			uuid := a_item
 		end
 
-	set_possible_client (a_possible_client: IG_ECF_CLIENT_SUPPLIER)
+	set_possible_client (a_possible_client: IG_ECF)
 			-- `set_possible_client' from `a_possible_client'.
 		note
 			design: "[
@@ -245,7 +245,7 @@ feature -- Outputs
 
 feature {NONE} -- Implementation: Anchors
 
-	list_anchor: detachable HASH_TABLE [IG_ECF_CLIENT_SUPPLIER, STRING]
+	list_anchor: detachable HASH_TABLE [IG_ECF, STRING]
 			-- `list_anchor' for `clients' and `suppliers'.
 
 end
