@@ -12,6 +12,11 @@ inherit
 			out
 		end
 
+	FW_PROCESS_HELPER
+		undefine
+			out
+		end
+
 feature -- Access
 
 	name: STRING
@@ -182,44 +187,6 @@ feature -- Status Report
 		do
 			Result := output_of_command ("git status", path.name.out)
 		end
-
-	last_error: INTEGER
-
-	output_of_command (a_cmd, a_directory: STRING): STRING
-                -- `output_of_command' `a_cmd' launched in `a_directory'.
-        require
-			cmd_attached: attached a_cmd
-			dir_attached: attached a_directory
-        local
-                l_factory: PROCESS_FACTORY
-                l_process: PROCESS
-                retried: BOOLEAN
-        do
-        	create Result.make_empty
-			if not retried then
-				last_error := 0
-				create Result.make (100)
-				create l_factory
-				l_process := l_factory.process_launcher_with_command_line (a_cmd, a_directory)
-				l_process.set_hidden (True)
-				l_process.set_separate_console (False)
-				l_process.redirect_input_to_stream
-				l_process.redirect_output_to_agent (agent (la_result, la_content: STRING)
-														do
-															if attached la_content then
-																la_result.append_string (la_content)
-															end
-														end (Result, ?)
-													)
-				l_process.launch
-				l_process.wait_for_exit
-			else
-				last_error := 1
-			end
-        rescue
-			retried := True
-			retry
-        end
 
 feature -- Basic Operations
 
