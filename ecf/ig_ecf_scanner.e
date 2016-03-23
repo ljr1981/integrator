@@ -187,11 +187,11 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 		local
 			l_parser: XML_PARSER
 			l_callbacks: IG_ECF_XML_CALLBACKS
-			l_uuid: UUID
-			l_is_computed_uuid: BOOLEAN
-			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING]
-			seeding_integer: INTEGER
-			l_ecf: detachable IG_ECF
+--			l_uuid: UUID
+--			l_is_computed_uuid: BOOLEAN
+--			l_ecf_library_dependencies: HASH_TABLE [attached like ecf_library_dependencies_data_anchor, STRING]
+--			seeding_integer: INTEGER
+--			l_ecf: detachable IG_ECF
 		do
 			l_parser := (create {XML_PARSER_FACTORY}).new_parser
 			create l_callbacks.make

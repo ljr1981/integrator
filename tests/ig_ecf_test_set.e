@@ -46,23 +46,24 @@ feature -- Test routines
 			assert_strings_equal ("mock_trunk", mock_trunk_out, mock_trunk.out)
 		end
 
-	ig_ecf_compile_test
-			-- `ig_ecf_compile_test'.
-		note
-			testing: "execution/serial"
+	git_status_test
+			-- `git_status_test'.
+		local
+			l_mock: IG_ECF
 		do
-			mock_for_compile.compile
-		end
-
-	ig_ecf_freeze_test
-			-- `ig_ecf_freeze_test'.
-		note
-			testing: "execution/serial"
-		do
-			mock_for_compile.freeze ("test")
+			l_mock := mock_for_compile
+			assert_strings_equal ("has_output", git_status_up_to_date, l_mock.github_status)
+			assert_integers_equal ("no_error", 0, l_mock.last_error)
 		end
 
 feature {NONE} -- Implementation: Mocks
+
+	git_status_up_to_date: STRING = "[
+On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working directory clean
+
+]"
 
 	mock_for_compile: IG_ECF
 			-- `mock_for_compile' tests.

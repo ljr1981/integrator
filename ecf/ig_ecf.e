@@ -126,8 +126,6 @@ feature -- Settings
 				`a_possible_client's `suppliers' list to see if we are on it.
 				If so, we put `a_possible_client' on our list of `clients'.
 				]"
-		local
-			l_uuid: STRING
 		do
 			if attached uuid as al_supplier_uuid and then attached al_supplier_uuid.out as al_supplier_uuid_string and then
 				attached a_possible_client.suppliers as al_possible_client_suppliers
@@ -180,15 +178,53 @@ feature -- Status Report
 			Result := is_github_based and then (has_github_suppliers and not has_github_clients)
 		end
 
+	github_status: STRING
+		do
+			Result := output_of_command ("git status", path.name.out)
+		end
+
+	last_error: INTEGER
+
+	output_of_command (a_cmd, a_directory: STRING): STRING
+                -- `output_of_command' `a_cmd' launched in `a_directory'.
+        require
+			cmd_attached: attached a_cmd
+			dir_attached: attached a_directory
+        local
+                l_factory: PROCESS_FACTORY
+                l_process: PROCESS
+                retried: BOOLEAN
+        do
+        	create Result.make_empty
+			if not retried then
+				last_error := 0
+				create Result.make (100)
+				create l_factory
+				l_process := l_factory.process_launcher_with_command_line (a_cmd, a_directory)
+				l_process.set_hidden (True)
+				l_process.set_separate_console (False)
+				l_process.redirect_input_to_stream
+				l_process.redirect_output_to_agent (agent (la_result, la_content: STRING)
+														do
+															if attached la_content then
+																la_result.append_string (la_content)
+															end
+														end (Result, ?)
+													)
+				l_process.launch
+				l_process.wait_for_exit
+			else
+				last_error := 1
+			end
+        rescue
+			retried := True
+			retry
+        end
+
 feature -- Basic Operations
 
 	compile
 			-- `compile' F7.
-		local
-			l_cmd: PLAIN_TEXT_FILE
-			l_cmd_line: STRING
-			l_process_factory: PROCESS_FACTORY
-			l_process: PROCESS
 		do
 --			create l_cmd_line.make_empty
 --			l_cmd_line.append_string ("cd " + path.name + "%N")
@@ -209,25 +245,7 @@ feature -- Basic Operations
 --			l_cmd.put_string (l_cmd_line.out)
 --			l_cmd.flush
 --			l_cmd.close
-
---			create l_process_factory
---			l_process := l_process_factory.process_launcher_with_command_line (path.name + "\compile_" + name + ".cmd", path.name)
---			l_process.set_hidden (True)
---			l_process.set_separate_console (False)
---			l_process.set_detached_console (False)
---			l_process.redirect_error_to_file ("compile_error_out.txt")
---			l_process.redirect_output_to_file ("compile_out.txt")
---			l_process.set_on_successful_launch_handler (agent do append_to_pending_output (name + " launched successfully!"); on_exit end)
---			l_process.set_on_fail_launch_handler (agent do append_to_pending_output (name + " failed to launch!"); on_exit end)
---			l_process.set_on_exit_handler (agent on_exit)
---			l_process.set_on_terminate_handler (agent on_exit)
---			l_process.set_on_start_handler (agent append_to_pending_output (name + "started!"))
---			l_process.launch
 		end
-
-	pending_output: STRING attribute create Result.make_empty end
-	append_to_pending_output (a_text: STRING) do pending_output.append_string ("Text: " + a_text) end
-	on_exit do pending_output.append_string ("%NExit.") end
 
 	find_added_classes_and_recompile
 			-- `find_added_classes_and_recompile' Alt + F8.
