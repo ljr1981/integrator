@@ -39,7 +39,7 @@
 	</target>
 	<target name="test" extends="integrator">
 		<description>integrator Tests</description>
-		<root class="ANY" feature="default_create"/>
+		<root class="IG_SCOTTY_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
