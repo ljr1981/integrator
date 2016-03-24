@@ -11,6 +11,8 @@ inherit
 
 	IG_ANY
 
+	FW_PROCESS_HELPER
+
 create
 	make
 
@@ -18,6 +20,17 @@ feature {NONE} -- Initialization
 
 	make
 			-- `make' initialization.
+		do
+			if has_file_in_path ("git.exe") and has_file_in_path ("ec.exe") then
+				scan
+			else
+				logger.write_error ("git.exe or ec.exe not in path.")
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	scan
 		local
 			l_scanner: IG_ECF_SCANNER
 			l_ecf: IG_ECF
@@ -25,9 +38,9 @@ feature {NONE} -- Initialization
 			l_dos: FW_DOS_QUESTION_AND_ANSWER
 			l_msg: STRING
 		do
-			create l_spinner
-			create l_dos
-			create l_scanner
+			create l_spinner; logger.write_information ("create FW_DOS_SPINNER")
+			create l_dos; logger.write_information ("create FW_DOS_QUESTION_AND_ANSWER")
+			create l_scanner; logger.write_information ("create IG_ECF_SCANNER")
 
 			l_msg := "scanning ...%N"; print (l_msg); logger.write_information (l_msg)
 			l_scanner.scan_github
@@ -37,7 +50,7 @@ feature {NONE} -- Initialization
 			across
 				l_scanner.ecf_libraries as ic_ecfs
 			loop
-				ic_ecfs.item.git_fetch_dry_run
+				ic_ecfs.item.git_fetch_dry_run; logger.write_information ("git_fetch_dry_run")
 				if (ic_ecfs.item.is_trunk or ic_ecfs.item.is_branch or ic_ecfs.item.is_leaf) and then
 						ic_ecfs.item.has_remote_github_changes
 				then
