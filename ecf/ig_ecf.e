@@ -12,9 +12,13 @@ inherit
 			out
 		end
 
-	FW_PROCESS_HELPER
+	GH_COMMANDS
+		rename
+			command_path as path
 		undefine
 			out
+		redefine
+			path
 		end
 
 feature -- Access
@@ -181,11 +185,6 @@ feature -- Status Report
 			-- `is_branch'?
 		do
 			Result := is_github_based and then (has_github_suppliers and not has_github_clients)
-		end
-
-	github_status: STRING
-		do
-			Result := output_of_command ("git status", path.name.out)
 		end
 
 feature -- Basic Operations

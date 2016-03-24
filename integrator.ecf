@@ -12,6 +12,7 @@
 		<library name="curl" location="$ISE_LIBRARY\library\curl\curl-safe.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>
 		<library name="framework" location="$GITHUB\Framework\framework.ecf"/>
+		<library name="github_helper" location="$GITHUB\github_helper\github_helper.ecf"/>
 		<library name="logging_extension" location="$GITHUB\logging_extension\logging_extension.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="parse" location="$ISE_LIBRARY\library\parse\parse-safe.ecf"/>
