@@ -21,6 +21,17 @@ inherit
 			path
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- `make' Current.
+		do
+			set_git_exe_path
+		end
+
 feature -- Access
 
 	name: STRING

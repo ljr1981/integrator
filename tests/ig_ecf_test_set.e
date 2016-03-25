@@ -52,7 +52,8 @@ feature -- Test routines
 			l_mock: IG_ECF
 		do
 			l_mock := mock_for_compile
-			assert_strings_equal ("has_output", git_status_up_to_date, l_mock.github_status)
+			l_mock.github_status
+			assert_strings_equal ("has_output", git_status_up_to_date, l_mock.attached_command_results)
 			assert_integers_equal ("no_error", 0, l_mock.last_error)
 		end
 
@@ -139,7 +140,7 @@ Suppliers:
 
 	mock_leaf: IG_ECF
 		once
-			create Result
+			create Result.make
 			Result.set_name ("ecf_leaf")
 			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_leaf"))
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0001"))
@@ -148,7 +149,7 @@ Suppliers:
 
 	mock_branch: IG_ECF
 		once
-			create Result
+			create Result.make
 			Result.set_name ("ecf_branch")
 			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_branch"))
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0002"))
@@ -157,7 +158,7 @@ Suppliers:
 
 	mock_trunk: IG_ECF
 		once
-			create Result
+			create Result.make
 			Result.set_name ("ecf_trunk")
 			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_trunk"))
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0003"))

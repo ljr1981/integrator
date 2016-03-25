@@ -105,7 +105,7 @@ feature -- Access
 		do
 			-- Pull in data (post-parse) from all the "data" below
 			if attached last_uuid as al_uuid and then (create {UUID}).is_valid_uuid (al_uuid) then
-				create Result
+				create Result.make
 				Result.set_uuid (create {UUID}.make_from_string (al_uuid))
 				check attached last_system_name as al_item then
 					Result.set_name (al_item)
@@ -127,7 +127,7 @@ feature -- Access
 					suppliers as ic_suppliers
 				loop
 					if ic_suppliers.item.is_github then
-						create l_supplier
+						create l_supplier.make
 						l_supplier.set_name (ic_suppliers.item.name)
 						if attached ic_suppliers.item.uuid as al_uuid_string then
 							l_supplier.set_uuid (create {UUID}.make_from_string (al_uuid_string))

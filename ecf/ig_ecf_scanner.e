@@ -84,7 +84,7 @@ feature -- Basic Operations
 	scan_github
 			-- `scan_github'.
 		do
-			scan_path (github_path, default_scanning_start_level); logger.write_information ("scan_path " + github_path.name)
+			scan_path (github_path, default_scanning_start_level)
 			identify_ecf_dependencies
 		end
 
@@ -112,29 +112,23 @@ feature {NONE} -- Implementation: Basic Operations: Scanning
 		do
 			if attached a_path.extension as al_ext then
 				if al_ext.same_string (ecf_extension_string) then
-					process_ecf (a_path); logger.write_information ("process_ecf " + a_path.name)
-				else
-					logger.write_information ("process_ecf not same as " + ecf_extension_string)
+					process_ecf (a_path)
 				end
 			elseif a_path.name.has_substring (Dot_git_string) then
-				do_nothing; logger.write_information (Dot_git_string) -- .git is ignored
+				do_nothing -- .git is ignored
 			elseif a_path.name.has_substring (Dot_gitignore_string) then
-				do_nothing; logger.write_information (Dot_gitignore_string) -- .gitignore is ignored.
+				do_nothing -- .gitignore is ignored.
 			elseif a_path.name.has_substring (Git_config_string) then
-				do_nothing; logger.write_information (Git_config_string) -- git config's are ignored.
+				do_nothing -- git config's are ignored.
 			elseif a_path.name.has_substring (EIFGENs_string) then
-				do_nothing; logger.write_information (EIFGENs_string) -- EIFGENs are ignored.
+				do_nothing -- EIFGENs are ignored.
 			else
-				create l_dir.make_with_path (a_path); logger.write_information ("create dir with " + a_path.name)
+				create l_dir.make_with_path (a_path)
 				across
 					l_dir.entries as ic_entries
 				loop
-					logger.write_information ("entry " + ic_entries.item.name.out)
 					if not (ic_entries.item.is_current_symbol or ic_entries.item.is_parent_symbol) then -- ignore "."/".." paths
-						logger.write_information ("scan_path subdir")
 						scan_path (create {PATH}.make_from_string (l_dir.name.out + a_path.directory_separator.out + ic_entries.item.name.out), a_level + 1)
-					else
-						logger.write_information ("./..")
 					end
 				end
 			end
@@ -152,14 +146,12 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 			l_has_git: BOOLEAN
 			l_has_git_config: BOOLEAN
 		do
-			logger.write_information ("process_ecf")
 			create l_parent.make_with_path (a_path.parent)
 			across
 				l_parent.entries as ic_parent_entries
 			until
 				l_has_git
 			loop
-				logger.write_information ("process_ecf: " + ic_parent_entries.item.name.out)
 				if ic_parent_entries.item.name.has_substring (Dot_git_string) and then not ic_parent_entries.item.name.has_substring (Dot_gitignore_string) then
 					create l_git_path.make_from_string (l_parent.name.out + a_path.directory_separator.out + ic_parent_entries.item.name.out)
 					l_has_git := attached l_git_path
