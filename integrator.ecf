@@ -2,11 +2,13 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="integrator" uuid="4044DD19-B545-FAE6-1541-00005FD08DC5" readonly="false">
 	<description>integrator implementation</description>
 	<target name="integrator">
+		<description>Scotty the Engineer Helper</description>
 		<root class="IG_SCOTTY_APPLICATION" feature="make"/>
 		<option warning="true" void_safety="transitional" syntax="provisional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="scotty"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\curl\curl-safe.ecf"/>
@@ -50,6 +52,7 @@
 		<option profile="false">
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="integrator"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<cluster name="tests" location=".\tests\" recursive="true"/>
 	</target>
