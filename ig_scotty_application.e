@@ -65,6 +65,7 @@ feature {NONE} -- Implementation
 					ic_ecfs.item.has_local_git_changes
 				then
 					if ic_ecfs.item.has_remote_github_changes then
+						print ('%/0x08/')
 						l_msg := ic_ecfs.item.name + "%T%T" + ic_ecfs.item.path.name; print ("%N" + l_msg + "%N")
 					end
 				else
