@@ -31,8 +31,10 @@ feature {NONE} -- Implementation
 			l_scanner: IG_ECF_SCANNER
 			l_ecf: IG_ECF
 			l_msg: STRING
+			l_spinner: FW_DOS_SPINNER
 		do
 			create l_scanner
+			create l_spinner
 
 			l_msg := "scanning ...%N"; print (l_msg)
 			l_scanner.scan_github
@@ -49,9 +51,9 @@ feature {NONE} -- Implementation
 						l_msg := ic_ecfs.item.name + "%T%T" + ic_ecfs.item.path.name; print ("%N" + l_msg + "%N")
 					end
 				else
-					print ('.')
+					print (l_spinner.next_prompt)
 				end
-				print ('.')
+				print (l_spinner.next_prompt)
 			end
 			l_msg := "%NProjects with local changes:%N"; print (l_msg)
 			l_msg := "-----------------------------%N"; print (l_msg)
@@ -62,16 +64,14 @@ feature {NONE} -- Implementation
 				if (ic_ecfs.item.is_trunk or ic_ecfs.item.is_branch or ic_ecfs.item.is_leaf) and then
 					ic_ecfs.item.has_local_git_changes
 				then
-					print ("%B")
 					if ic_ecfs.item.has_remote_github_changes then
 						l_msg := ic_ecfs.item.name + "%T%T" + ic_ecfs.item.path.name; print ("%N" + l_msg + "%N")
 					end
 				else
-					print ('.')
+					print (l_spinner.next_prompt)
 				end
-				print ('.')
+				print (l_spinner.next_prompt)
 			end
-			print ("%B")
 		end
 
 end
