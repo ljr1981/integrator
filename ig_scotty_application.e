@@ -29,7 +29,6 @@ feature {NONE} -- Implementation
 	scan
 		local
 			l_scanner: IG_ECF_SCANNER
-			l_ecf: IG_ECF
 			l_msg: STRING
 			l_spinner: FW_DOS_SPINNER
 		do

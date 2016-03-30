@@ -97,6 +97,12 @@ feature -- Access
 			create Result.make (10)
 		end
 
+	graph_node: GV_NODE
+			-- `graph_node' of Current {IG_ECF}
+		do
+			create Result.make_with_id (create {GV_ID}.make_with_name (name))
+		end
+
 feature -- Settings
 
 	set_name (a_item: like name)
@@ -197,6 +203,16 @@ feature -- Status Report
 		do
 			Result := is_github_based and then (has_github_suppliers and not has_github_clients)
 		end
+
+--	is_circular (a_uuid: UUID): BOOLEAN
+--		do
+--			Result := across
+--							suppliers as ic
+--						all
+--							not ic.item.uuid.out.same_string (a_uuid.out) and
+--								not ic.item.is_circular (a_uuid)
+--						end
+--		end
 
 feature -- Basic Operations
 

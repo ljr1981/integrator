@@ -14,6 +14,8 @@ inherit
 
 	IG_CONSTANTS
 
+	FW_PROCESS_HELPER
+
 feature -- Access
 
 	ecf_libraries: HASH_TABLE [IG_ECF, STRING]
@@ -86,6 +88,7 @@ feature -- Basic Operations
 		do
 			scan_path (github_path, default_scanning_start_level)
 			identify_ecf_dependencies
+			generate_graph
 		end
 
 	output_compile_cmd
@@ -265,6 +268,53 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 					ic_supplier.item.set_possible_client (ic_client.item)
 				end
 			end
+		end
+
+	generate_graph
+			-- `generate_graph' for Current {IG_ECF_SCANNER}.
+		local
+			l_graph: GV_GRAPH
+			l_node: GV_NODE
+			l_edge: GV_EDGE
+			l_file: PLAIN_TEXT_FILE
+			l_png: RAW_FILE
+			l_graph_out: STRING
+		do
+			create l_graph.make_with_id (create {GV_ID}.make_with_name ("Github_library_map"))
+			l_graph.toggle_is_digraph
+			l_graph.set_attribute_value (agent l_graph.rankdir, "LR")
+			l_graph.set_attribute_value (agent l_graph.size, "50,50")
+			across ecf_libraries as ic_libs loop
+				if ic_libs.item.is_trunk or ic_libs.item.is_branch or ic_libs.item.is_leaf then
+					l_node := ic_libs.item.graph_node
+					l_node.set_attribute_value (agent l_node.shape, "circle")
+					l_graph.statement_list.force (l_node)
+				end
+			end
+			across ecf_libraries as ic_libs loop
+				if
+					(ic_libs.item.is_trunk or ic_libs.item.is_branch or ic_libs.item.is_leaf)
+				then
+					across
+						ic_libs.item.clients as ic_suppliers
+					loop
+						create l_edge.make_with_nodes (ic_suppliers.item.graph_node, ic_libs.item.graph_node, True)
+						l_edge.set_attribute_value (agent l_edge.label, "(s)")
+						l_graph.statement_list.force (l_edge)
+					end
+				end
+			end
+
+			l_graph_out := l_graph.graph_out.twin
+			l_graph_out.replace_substring_all (";", ";%N%T")
+			l_graph_out.replace_substring_all ("{", "{%N%T")
+			l_graph_out.replace_substring_all ("}", "%N%T}")
+				-- Create PNG file to visually inspect the outcome of generation ...
+			create l_file.make_create_read_write ("library_graph.txt")
+			l_file.put_string (l_graph_out)
+			l_file.close
+
+			output_of_command ("library_graph.cmd", "").do_nothing
 		end
 
 feature {NONE} -- Implementation: Constants
