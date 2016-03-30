@@ -29,8 +29,6 @@ digraph Github_library_map {
 	 node [shape=circle];
 	 state_machine;
 	 node [shape=circle];
-	 test_extension;
-	 node [shape=circle];
 	 test_set_bridge;
 	 node [shape=circle];
 	 validation;
@@ -70,12 +68,12 @@ digraph Github_library_map {
 	 integrator -> state_machine [label="(s)"];
 	 logging_extension -> state_machine [label="(s)"];
 	 validation -> state_machine [label="(s)"];
-	 logging_extension -> test_extension [label="(s)"];
 	 framework -> test_set_bridge [label="(s)"];
 	 github_helper -> test_set_bridge [label="(s)"];
 	 graphviz -> test_set_bridge [label="(s)"];
 	 ehrapp -> test_set_bridge [label="(s)"];
 	 integrator -> test_set_bridge [label="(s)"];
+	 logging_extension -> test_set_bridge [label="(s)"];
 	 ecfwingen -> validation [label="(s)"];
 	 github_helper -> validation [label="(s)"];
 	 graphviz -> validation [label="(s)"];
