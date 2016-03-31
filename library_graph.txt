@@ -51,6 +51,7 @@ digraph Github_library_map {
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
 	 integrator -> framework [label="(s)"];
+	 permission -> framework [label="(s)"];
 	 integrator -> github_helper [label="(s)"];
 	 integrator -> graphviz [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
