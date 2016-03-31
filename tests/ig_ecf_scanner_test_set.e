@@ -48,7 +48,7 @@ feature -- Test routines
 			assert_integers_equal ("has_16_github_based_ecfs", 16, l_scanner.github_count)
 			assert_integers_equal ("has_0_github_trunks", 0, l_scanner.github_trunk_count)
 			assert_strings_equal ("the_trunks", "", the_trunks (l_scanner.ecf_libraries))
-			assert_strings_equal ("the_branches", "framework,github_helper,logging_extension,pub_sub,randomizer,state_machine,test_extension,test_set_bridge,validation", the_branches (l_scanner.ecf_libraries))
+			assert_strings_equal ("the_branches", "framework,github_helper,graphviz,logging_extension,pub_sub,randomizer,state_machine,test_set_bridge,validation", the_branches (l_scanner.ecf_libraries))
 			assert_strings_equal ("the_leaves", "ecfwingen,ecf_generator,ehrapp,ig_test_project,integrator,permission,sav_training", the_leaves (l_scanner.ecf_libraries))
 		end
 

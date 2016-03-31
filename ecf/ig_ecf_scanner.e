@@ -288,6 +288,13 @@ feature {NONE} -- Implementation: Basic Operations: Parsing
 				if ic_libs.item.is_trunk or ic_libs.item.is_branch or ic_libs.item.is_leaf then
 					l_node := ic_libs.item.graph_node
 					l_node.set_attribute_value (agent l_node.shape, "circle")
+					if ic_libs.item.is_trunk then
+						l_node.set_attribute_value (agent l_node.image, "..\images\trunk.png")
+					elseif ic_libs.item.is_branch then
+						l_node.set_attribute_value (agent l_node.image, "..\images\branch.png")
+					elseif ic_libs.item.is_leaf then
+						l_node.set_attribute_value (agent l_node.image, "..\images\leaf.png")
+					end
 					l_graph.statement_list.force (l_node)
 				end
 			end
