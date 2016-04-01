@@ -40,16 +40,16 @@ feature -- Test routines
 		do
 			create l_scanner
 			l_scanner.scan_github
-			assert_integers_equal ("has_111_you_may_have_more_or_less", 112, l_scanner.ecf_libraries.count)
+			assert_integers_equal ("has_113_you_may_have_more_or_less", 113, l_scanner.ecf_libraries.count)
 			assert_integers_equal ("has_9_branches", 9, l_scanner.branch_count)
-			assert_integers_equal ("has_7_leaves", 7, l_scanner.leaf_count)
+			assert_integers_equal ("has_8_leaves", 8, l_scanner.leaf_count)
 			assert_integers_equal ("has_96_trunks", 96, l_scanner.trunk_count)
 			assert_integers_equal ("branches_leaves_trunks_counts_are_ecf_libraries_count", l_scanner.ecf_libraries.count, l_scanner.trunk_count + l_scanner.branch_count + l_scanner.leaf_count)
-			assert_integers_equal ("has_16_github_based_ecfs", 16, l_scanner.github_count)
+			assert_integers_equal ("has_17_github_based_ecfs", 17, l_scanner.github_count)
 			assert_integers_equal ("has_0_github_trunks", 0, l_scanner.github_trunk_count)
 			assert_strings_equal ("the_trunks", "", the_trunks (l_scanner.ecf_libraries))
-			assert_strings_equal ("the_branches", "framework,github_helper,graphviz,logging_extension,pub_sub,randomizer,state_machine,test_set_bridge,validation", the_branches (l_scanner.ecf_libraries))
-			assert_strings_equal ("the_leaves", "ecfwingen,ecf_generator,ehrapp,ig_test_project,integrator,permission,sav_training", the_leaves (l_scanner.ecf_libraries))
+			assert_strings_equal ("the_branches", "framework,github_helper,graphviz,logging_extension,pub_sub,randomizer,state_machine,test_extension,validation", the_branches (l_scanner.ecf_libraries))
+			assert_strings_equal ("the_leaves", "ecfwingen,ecf_generator,ehrapp,ig_test_project,integrator,permission,reporting,sav_training", the_leaves (l_scanner.ecf_libraries))
 		end
 
 	ise_eiffel_test

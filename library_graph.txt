@@ -38,6 +38,9 @@ digraph Github_library_map {
 	 randomizer;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 reporting;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 sav_training;
 	 node [image="..\images\branch.png";
 	 shape=circle];
@@ -55,13 +58,11 @@ digraph Github_library_map {
 	 permission -> framework [label="(s)"];
 	 reporting -> framework [label="(s)"];
 	 integrator -> github_helper [label="(s)"];
-	 reporting -> github_helper [label="(s)"];
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
 	 reporting -> logging_extension [label="(s)"];
-	 reporting -> permission [label="(s)"];
 	 ecfwingen -> pub_sub [label="(s)"];
 	 ecf_generator -> pub_sub [label="(s)"];
 	 github_helper -> pub_sub [label="(s)"];
