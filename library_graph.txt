@@ -2,6 +2,9 @@ digraph Github_library_map {
 	rankdir=LR;
 	 size="50,50" node [image="..\images\leaf.png";
 	 shape=circle];
+	 html;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 ecfwingen;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
@@ -51,6 +54,7 @@ digraph Github_library_map {
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 validation;
+	 html -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
@@ -95,6 +99,7 @@ digraph Github_library_map {
 	 logging_extension -> state_machine [label="(s)"];
 	 reporting -> state_machine [label="(s)"];
 	 validation -> state_machine [label="(s)"];
+	 html -> test_extension [label="(s)"];
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
 	 graphviz -> test_extension [label="(s)"];
