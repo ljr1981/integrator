@@ -27,6 +27,9 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 integrator;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 locking;
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 logging_extension;
@@ -59,6 +62,7 @@ digraph Github_library_map {
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
 	 integrator -> framework [label="(s)"];
+	 locking -> framework [label="(s)"];
 	 permission -> framework [label="(s)"];
 	 reporting -> framework [label="(s)"];
 	 integrator -> github_helper [label="(s)"];
@@ -84,6 +88,7 @@ digraph Github_library_map {
 	 graphviz -> randomizer [label="(s)"];
 	 ig_test_project -> randomizer [label="(s)"];
 	 integrator -> randomizer [label="(s)"];
+	 locking -> randomizer [label="(s)"];
 	 logging_extension -> randomizer [label="(s)"];
 	 permission -> randomizer [label="(s)"];
 	 pub_sub -> randomizer [label="(s)"];
@@ -96,6 +101,7 @@ digraph Github_library_map {
 	 graphviz -> state_machine [label="(s)"];
 	 ig_test_project -> state_machine [label="(s)"];
 	 integrator -> state_machine [label="(s)"];
+	 locking -> state_machine [label="(s)"];
 	 logging_extension -> state_machine [label="(s)"];
 	 reporting -> state_machine [label="(s)"];
 	 validation -> state_machine [label="(s)"];
@@ -105,6 +111,7 @@ digraph Github_library_map {
 	 graphviz -> test_extension [label="(s)"];
 	 ehrapp -> test_extension [label="(s)"];
 	 integrator -> test_extension [label="(s)"];
+	 locking -> test_extension [label="(s)"];
 	 logging_extension -> test_extension [label="(s)"];
 	 permission -> test_extension [label="(s)"];
 	 reporting -> test_extension [label="(s)"];
@@ -113,6 +120,7 @@ digraph Github_library_map {
 	 graphviz -> validation [label="(s)"];
 	 ig_test_project -> validation [label="(s)"];
 	 integrator -> validation [label="(s)"];
+	 locking -> validation [label="(s)"];
 	 logging_extension -> validation [label="(s)"];
 	 reporting -> validation [label="(s)"];
 	
