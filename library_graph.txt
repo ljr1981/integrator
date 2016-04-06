@@ -1,6 +1,6 @@
 digraph Github_library_map {
 	rankdir=LR;
-	 size="50,50" node [image="..\images\leaf.png";
+	 size="50,50" node [image="..\images\branch.png";
 	 shape=circle];
 	 html;
 	 node [image="..\images\leaf.png";
@@ -57,6 +57,7 @@ digraph Github_library_map {
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 validation;
+	 reporting -> html [label="(s)"];
 	 html -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
