@@ -2,7 +2,7 @@ digraph Github_library_map {
 	rankdir=LR;
 	 size="50,50" node [image="..\images\branch.png";
 	 shape=circle];
-	 html;
+	 css;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 ecfwingen;
@@ -21,6 +21,9 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 ehrapp;
+	 node [image="..\images\branch.png";
+	 shape=circle];
+	 html;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 ig_test_project;
@@ -57,11 +60,12 @@ digraph Github_library_map {
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 validation;
-	 reporting -> html [label="(s)"];
-	 html -> framework [label="(s)"];
+	 html -> css [label="(s)"];
+	 css -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
+	 html -> framework [label="(s)"];
 	 integrator -> framework [label="(s)"];
 	 locking -> framework [label="(s)"];
 	 permission -> framework [label="(s)"];
@@ -69,6 +73,7 @@ digraph Github_library_map {
 	 integrator -> github_helper [label="(s)"];
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
+	 reporting -> html [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
 	 reporting -> logging_extension [label="(s)"];
@@ -106,11 +111,12 @@ digraph Github_library_map {
 	 logging_extension -> state_machine [label="(s)"];
 	 reporting -> state_machine [label="(s)"];
 	 validation -> state_machine [label="(s)"];
-	 html -> test_extension [label="(s)"];
+	 css -> test_extension [label="(s)"];
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
 	 graphviz -> test_extension [label="(s)"];
 	 ehrapp -> test_extension [label="(s)"];
+	 html -> test_extension [label="(s)"];
 	 integrator -> test_extension [label="(s)"];
 	 locking -> test_extension [label="(s)"];
 	 logging_extension -> test_extension [label="(s)"];
