@@ -73,6 +73,7 @@ digraph Github_library_map {
 	 css -> framework [label="(s)"];
 	 eav -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
+	 fox_inspector -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
 	 html -> framework [label="(s)"];
@@ -85,6 +86,7 @@ digraph Github_library_map {
 	 permission -> framework [label="(s)"];
 	 reporting -> framework [label="(s)"];
 	 integrator -> github_helper [label="(s)"];
+	 fox_inspector -> graphviz [label="(s)"];
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
 	 reporting -> html [label="(s)"];
@@ -132,6 +134,7 @@ digraph Github_library_map {
 	 validation -> state_machine [label="(s)"];
 	 css -> test_extension [label="(s)"];
 	 eav -> test_extension [label="(s)"];
+	 fox_inspector -> test_extension [label="(s)"];
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
 	 graphviz -> test_extension [label="(s)"];
