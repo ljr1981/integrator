@@ -9,6 +9,9 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 ecf_generator;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 fox_inspector;
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 framework;
@@ -82,7 +85,6 @@ digraph Github_library_map {
 	 locking -> framework [label="(s)"];
 	 mangata -> framework [label="(s)"];
 	 nssm_shell -> framework [label="(s)"];
-	 pattern_wizard -> framework [label="(s)"];
 	 permission -> framework [label="(s)"];
 	 reporting -> framework [label="(s)"];
 	 integrator -> github_helper [label="(s)"];
@@ -117,7 +119,6 @@ digraph Github_library_map {
 	 logging_extension -> randomizer [label="(s)"];
 	 mangata -> randomizer [label="(s)"];
 	 nssm_shell -> randomizer [label="(s)"];
-	 pattern_wizard -> randomizer [label="(s)"];
 	 permission -> randomizer [label="(s)"];
 	 pub_sub -> randomizer [label="(s)"];
 	 reporting -> randomizer [label="(s)"];
