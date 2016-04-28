@@ -1,6 +1,6 @@
 digraph Github_library_map {
 	rankdir=LR;
-	 size="50,50" node [image="..\images\branch.png";
+	 size="50,50" node [image="..\images\leaf.png";
 	 shape=circle];
 	 bem;
 	 node [image="..\images\branch.png";
@@ -78,7 +78,6 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 web_components;
-	 css -> bem [label="(s)"];
 	 html -> css [label="(s)"];
 	 bem -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
