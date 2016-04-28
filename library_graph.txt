@@ -79,7 +79,6 @@ digraph Github_library_map {
 	 shape=circle];
 	 web_components;
 	 css -> bem [label="(s)"];
-	 html -> bem [label="(s)"];
 	 html -> css [label="(s)"];
 	 bem -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
