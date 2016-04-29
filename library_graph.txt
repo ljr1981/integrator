@@ -1,6 +1,6 @@
 digraph Github_library_map {
 	rankdir=LR;
-	 size="50,50" node [image="..\images\leaf.png";
+	 size="50,50" node [image="..\images\branch.png";
 	 shape=circle];
 	 bem;
 	 node [image="..\images\branch.png";
@@ -77,11 +77,15 @@ digraph Github_library_map {
 	 validation;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 website_x;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 web_components;
+	 website_x -> bem [label="(s)"];
 	 bem -> css [label="(s)"];
 	 html -> css [label="(s)"];
+	 website_x -> css [label="(s)"];
 	 bem -> framework [label="(s)"];
-	 blah_website -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
 	 eav -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
@@ -104,6 +108,7 @@ digraph Github_library_map {
 	 reporting -> graphviz [label="(s)"];
 	 website_x -> graphviz [label="(s)"];
 	 reporting -> html [label="(s)"];
+	 website_x -> html [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
 	 nssm_shell -> logging_extension [label="(s)"];
@@ -149,7 +154,6 @@ digraph Github_library_map {
 	 validation -> state_machine [label="(s)"];
 	 website_x -> state_machine [label="(s)"];
 	 bem -> test_extension [label="(s)"];
-	 blah_website -> test_extension [label="(s)"];
 	 css -> test_extension [label="(s)"];
 	 eav -> test_extension [label="(s)"];
 	 fox_inspector -> test_extension [label="(s)"];
