@@ -78,7 +78,7 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 website_x;
-	 node [image="..\images\leaf.png";
+	 node [image="..\images\branch.png";
 	 shape=circle];
 	 web_components;
 	 website_x -> bem [label="(s)"];
@@ -179,5 +179,6 @@ digraph Github_library_map {
 	 logging_extension -> validation [label="(s)"];
 	 reporting -> validation [label="(s)"];
 	 website_x -> validation [label="(s)"];
+	 website_x -> web_components [label="(s)"];
 	
 	}
