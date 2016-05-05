@@ -94,6 +94,7 @@ digraph Github_library_map {
 	 graphviz -> framework [label="(s)"];
 	 html -> framework [label="(s)"];
 	 integrator -> framework [label="(s)"];
+	 jqmobile -> framework [label="(s)"];
 	 json_ext -> framework [label="(s)"];
 	 locking -> framework [label="(s)"];
 	 mangata -> framework [label="(s)"];
@@ -107,6 +108,7 @@ digraph Github_library_map {
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
 	 website_x -> graphviz [label="(s)"];
+	 jqmobile -> html [label="(s)"];
 	 reporting -> html [label="(s)"];
 	 website_x -> html [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
@@ -163,6 +165,7 @@ digraph Github_library_map {
 	 ehrapp -> test_extension [label="(s)"];
 	 html -> test_extension [label="(s)"];
 	 integrator -> test_extension [label="(s)"];
+	 jqmobile -> test_extension [label="(s)"];
 	 json_ext -> test_extension [label="(s)"];
 	 locking -> test_extension [label="(s)"];
 	 logging_extension -> test_extension [label="(s)"];
