@@ -87,6 +87,7 @@ digraph Github_library_map {
 	 website_x -> bem [label="(s)"];
 	 bem -> css [label="(s)"];
 	 html -> css [label="(s)"];
+	 reporting -> css [label="(s)"];
 	 website_x -> css [label="(s)"];
 	 bem -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
