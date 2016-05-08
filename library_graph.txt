@@ -39,7 +39,7 @@ digraph Github_library_map {
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 jqmobile;
-	 node [image="..\images\leaf.png";
+	 node [image="..\images\branch.png";
 	 shape=circle];
 	 json_ext;
 	 node [image="..\images\leaf.png";
@@ -116,6 +116,7 @@ digraph Github_library_map {
 	 reporting -> html [label="(s)"];
 	 website_x -> html [label="(s)"];
 	 website_x -> jqmobile [label="(s)"];
+	 website_x -> json_ext [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
 	 nssm_shell -> logging_extension [label="(s)"];
