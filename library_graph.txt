@@ -14,6 +14,9 @@ digraph Github_library_map {
 	 ecf_generator;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 ewf_ext;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 fox_inspector;
 	 node [image="..\images\branch.png";
 	 shape=circle];
@@ -93,6 +96,7 @@ digraph Github_library_map {
 	 css -> framework [label="(s)"];
 	 eav -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
+	 ewf_ext -> framework [label="(s)"];
 	 fox_inspector -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
@@ -112,6 +116,7 @@ digraph Github_library_map {
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
 	 website_x -> graphviz [label="(s)"];
+	 ewf_ext -> html [label="(s)"];
 	 jqmobile -> html [label="(s)"];
 	 reporting -> html [label="(s)"];
 	 website_x -> html [label="(s)"];
@@ -164,6 +169,7 @@ digraph Github_library_map {
 	 bem -> test_extension [label="(s)"];
 	 css -> test_extension [label="(s)"];
 	 eav -> test_extension [label="(s)"];
+	 ewf_ext -> test_extension [label="(s)"];
 	 fox_inspector -> test_extension [label="(s)"];
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
