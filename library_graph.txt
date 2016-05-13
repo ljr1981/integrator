@@ -36,6 +36,9 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 integrator;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 java_script;
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 jqmobile;
@@ -98,6 +101,7 @@ digraph Github_library_map {
 	 graphviz -> framework [label="(s)"];
 	 html -> framework [label="(s)"];
 	 integrator -> framework [label="(s)"];
+	 java_script -> framework [label="(s)"];
 	 jqmobile -> framework [label="(s)"];
 	 json_ext -> framework [label="(s)"];
 	 locking -> framework [label="(s)"];
@@ -171,6 +175,7 @@ digraph Github_library_map {
 	 ehrapp -> test_extension [label="(s)"];
 	 html -> test_extension [label="(s)"];
 	 integrator -> test_extension [label="(s)"];
+	 java_script -> test_extension [label="(s)"];
 	 jqmobile -> test_extension [label="(s)"];
 	 json_ext -> test_extension [label="(s)"];
 	 locking -> test_extension [label="(s)"];
