@@ -64,8 +64,14 @@ feature {NONE} -- Implementation
 					ic_ecfs.item.has_local_git_changes
 				then
 					if ic_ecfs.item.has_remote_github_changes then
-						print ('%/0x08/')
+						print (backspace_character)
 						l_msg := ic_ecfs.item.name + "%T%T" + ic_ecfs.item.path.name; print ("%N" + l_msg + "%N")
+						print ("%T%T%TTest these before checking in%N%T%T%T-----------------------------%N")
+						across
+							ic_ecfs.item.clients as ic_clients
+						loop
+							print ("%T%T%T* " + ic_clients.item.name + "%N")
+						end
 					end
 				else
 					print (l_spinner.next_prompt)
@@ -73,5 +79,9 @@ feature {NONE} -- Implementation
 				print (l_spinner.next_prompt)
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	backspace_character: CHARACTER = '%/0x08/'
 
 end
