@@ -24,9 +24,6 @@ digraph Github_library_map {
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 graphviz;
-	 node [image="..\images\leaf.png";
-	 shape=circle];
-	 ehrapp;
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 html;
@@ -183,7 +180,6 @@ digraph Github_library_map {
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
 	 graphviz -> test_extension [label="(s)"];
-	 ehrapp -> test_extension [label="(s)"];
 	 html -> test_extension [label="(s)"];
 	 integrator -> test_extension [label="(s)"];
 	 java_script -> test_extension [label="(s)"];
