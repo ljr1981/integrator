@@ -127,6 +127,7 @@ digraph Github_library_map {
 	 website_x -> html [label="(s)"];
 	 moonshot -> jqmobile [label="(s)"];
 	 website_x -> jqmobile [label="(s)"];
+	 moonshot -> json_ext [label="(s)"];
 	 website_x -> json_ext [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
