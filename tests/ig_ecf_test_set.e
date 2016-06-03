@@ -89,7 +89,7 @@ nothing to commit, working directory clean
 
 	mock_leaf_out: STRING = "[
 Name: ecf_leaf
-Path: $GITHUB\ecf_leaf
+Path: ..\ecf_leaf
 UUID: 1899B6CC-17B2-B137-9900-00003F4D0001
 
 Clients:
@@ -98,39 +98,39 @@ Clients:
 Suppliers:
 
 	Name: ecf_branch
-	Path: $GITHUB\ecf_branch
+	Path: ..\ecf_branch
 	UUID: 1899B6CC-17B2-B137-9900-00003F4D0002
 
 ]"
 
 	mock_branch_out: STRING = "[
 Name: ecf_branch
-Path: $GITHUB\ecf_branch
+Path: ..\ecf_branch
 UUID: 1899B6CC-17B2-B137-9900-00003F4D0002
 
 Clients:
 
 	Name: ecf_leaf
-	Path: $GITHUB\ecf_leaf
+	Path: ..\ecf_leaf
 	UUID: 1899B6CC-17B2-B137-9900-00003F4D0001
 
 Suppliers:
 
 	Name: ecf_trunk
-	Path: $GITHUB\ecf_trunk
+	Path: ..\ecf_trunk
 	UUID: 1899B6CC-17B2-B137-9900-00003F4D0003
 
 ]"
 
 	mock_trunk_out: STRING = "[
 Name: ecf_trunk
-Path: $GITHUB\ecf_trunk
+Path: ..\ecf_trunk
 UUID: 1899B6CC-17B2-B137-9900-00003F4D0003
 
 Clients:
 
 	Name: ecf_branch
-	Path: $GITHUB\ecf_branch
+	Path: ..\ecf_branch
 	UUID: 1899B6CC-17B2-B137-9900-00003F4D0002
 
 Suppliers:
@@ -142,7 +142,7 @@ Suppliers:
 		once
 			create Result.make
 			Result.set_name ("ecf_leaf")
-			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_leaf"))
+			Result.set_path (create {PATH}.make_from_string ("..\ecf_leaf"))
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0001"))
 			across supplier_list_1 as ic_list loop Result.suppliers.force (ic_list.item, ic_list.item.uuid.out) end
 		end
@@ -151,7 +151,7 @@ Suppliers:
 		once
 			create Result.make
 			Result.set_name ("ecf_branch")
-			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_branch"))
+			Result.set_path (create {PATH}.make_from_string ("..\ecf_branch"))
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0002"))
 			across supplier_list_2 as ic_list loop Result.suppliers.force (ic_list.item, ic_list.item.uuid.out) end
 		end
@@ -160,7 +160,7 @@ Suppliers:
 		once
 			create Result.make
 			Result.set_name ("ecf_trunk")
-			Result.set_path (create {PATH}.make_from_string ("$GITHUB\ecf_trunk"))
+			Result.set_path (create {PATH}.make_from_string ("..\ecf_trunk"))
 			Result.set_uuid (create {UUID}.make_from_string ("1899B6CC-17B2-B137-9900-00003F4D0003"))
 		end
 

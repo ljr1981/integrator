@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="randomizer" location="$GITHUB\randomizer\randomizer.ecf"/>
+		<library name="randomizer" location="..\randomizer\randomizer.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<cluster name="pub_sub" location=".\" recursive="true">
 			<file_rule>
@@ -206,15 +206,15 @@ feature {NONE} -- Implementation
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\curl\curl-safe.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>
-		<library name="logging_extension" location="$GITHUB\logging_extension\logging_extension.ecf"/>
+		<library name="logging_extension" location="..\logging_extension\logging_extension.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
-		<library name="pub_sub" location="$GITHUB\pub_sub\pub_sub.ecf"/>
-		<library name="randomizer" location="$GITHUB\randomizer\randomizer.ecf"/>
-		<library name="state_machine" location="$GITHUB\state_machine\state_machine.ecf"/>
+		<library name="pub_sub" location="..\pub_sub\pub_sub.ecf"/>
+		<library name="randomizer" location="..\randomizer\randomizer.ecf"/>
+		<library name="state_machine" location="..\state_machine\state_machine.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
-		<library name="validation" location="$GITHUB\validation\validation.ecf"/>
+		<library name="validation" location="..\validation\validation.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
 		<cluster name="integrator" location=".\" recursive="true">
