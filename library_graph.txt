@@ -96,8 +96,6 @@ digraph Github_library_map {
 	 website_x -> css [label="(s)"];
 	 bem -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
-	 css_parser -> framework [label="(s)"];
-	 eav -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
@@ -110,7 +108,6 @@ digraph Github_library_map {
 	 permission -> framework [label="(s)"];
 	 reporting -> framework [label="(s)"];
 	 web_components -> framework [label="(s)"];
-	 zmq_server -> framework [label="(s)"];
 	 integrator -> github_helper [label="(s)"];
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
@@ -129,7 +126,6 @@ digraph Github_library_map {
 	 permission -> pub_sub [label="(s)"];
 	 reporting -> pub_sub [label="(s)"];
 	 state_machine -> pub_sub [label="(s)"];
-	 eav -> randomizer [label="(s)"];
 	 ecfwingen -> randomizer [label="(s)"];
 	 ecf_generator -> randomizer [label="(s)"];
 	 framework -> randomizer [label="(s)"];
@@ -158,8 +154,6 @@ digraph Github_library_map {
 	 validation -> state_machine [label="(s)"];
 	 bem -> test_extension [label="(s)"];
 	 css -> test_extension [label="(s)"];
-	 css_parser -> test_extension [label="(s)"];
-	 eav -> test_extension [label="(s)"];
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
 	 graphviz -> test_extension [label="(s)"];
@@ -173,7 +167,6 @@ digraph Github_library_map {
 	 permission -> test_extension [label="(s)"];
 	 reporting -> test_extension [label="(s)"];
 	 web_components -> test_extension [label="(s)"];
-	 zmq_server -> test_extension [label="(s)"];
 	 ecfwingen -> validation [label="(s)"];
 	 github_helper -> validation [label="(s)"];
 	 graphviz -> validation [label="(s)"];
