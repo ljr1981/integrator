@@ -8,6 +8,9 @@ digraph Github_library_map {
 	 css;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 eav;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 ecfwingen;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
