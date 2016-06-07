@@ -42,7 +42,7 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 jqmobile;
-	 node [image="..\images\leaf.png";
+	 node [image="..\images\branch.png";
 	 shape=circle];
 	 json_ext;
 	 node [image="..\images\leaf.png";
@@ -99,6 +99,7 @@ digraph Github_library_map {
 	 website_x -> css [label="(s)"];
 	 bem -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
+	 eav -> framework [label="(s)"];
 	 ecfwingen -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
@@ -115,6 +116,7 @@ digraph Github_library_map {
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
 	 reporting -> html [label="(s)"];
+	 eav -> json_ext [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
 	 nssm_shell -> logging_extension [label="(s)"];
@@ -129,6 +131,7 @@ digraph Github_library_map {
 	 permission -> pub_sub [label="(s)"];
 	 reporting -> pub_sub [label="(s)"];
 	 state_machine -> pub_sub [label="(s)"];
+	 eav -> randomizer [label="(s)"];
 	 ecfwingen -> randomizer [label="(s)"];
 	 ecf_generator -> randomizer [label="(s)"];
 	 framework -> randomizer [label="(s)"];
