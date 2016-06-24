@@ -160,6 +160,7 @@ digraph Github_library_map {
 	 validation -> state_machine [label="(s)"];
 	 bem -> test_extension [label="(s)"];
 	 css -> test_extension [label="(s)"];
+	 eav -> test_extension [label="(s)"];
 	 framework -> test_extension [label="(s)"];
 	 github_helper -> test_extension [label="(s)"];
 	 graphviz -> test_extension [label="(s)"];
