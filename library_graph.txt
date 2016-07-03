@@ -38,6 +38,9 @@ digraph Github_library_map {
 	 integrator;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 iselectmd;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 java_script;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
