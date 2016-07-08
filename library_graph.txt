@@ -42,7 +42,7 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 jqmobile;
-	 node [image="..\images\branch.png";
+	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 jqueryui;
 	 node [image="..\images\branch.png";
@@ -118,7 +118,6 @@ digraph Github_library_map {
 	 integrator -> graphviz [label="(s)"];
 	 reporting -> graphviz [label="(s)"];
 	 reporting -> html [label="(s)"];
-	 html -> jqueryui [label="(s)"];
 	 eav -> json_ext [label="(s)"];
 	 github_helper -> logging_extension [label="(s)"];
 	 integrator -> logging_extension [label="(s)"];
