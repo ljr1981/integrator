@@ -3,12 +3,18 @@ digraph Github_library_map {
 	 size="50,50" node [image="..\images\branch.png";
 	 shape=circle];
 	 bem;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 bootstrap;
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 css;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 eav;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 ecfwingen;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 ecf_generator;
@@ -48,6 +54,9 @@ digraph Github_library_map {
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 json_ext;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 kendo;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 locking;
@@ -103,6 +112,7 @@ digraph Github_library_map {
 	 bem -> framework [label="(s)"];
 	 css -> framework [label="(s)"];
 	 eav -> framework [label="(s)"];
+	 ecfwingen -> framework [label="(s)"];
 	 github_helper -> framework [label="(s)"];
 	 graphviz -> framework [label="(s)"];
 	 html -> framework [label="(s)"];
@@ -123,6 +133,7 @@ digraph Github_library_map {
 	 integrator -> logging_extension [label="(s)"];
 	 nssm_shell -> logging_extension [label="(s)"];
 	 reporting -> logging_extension [label="(s)"];
+	 ecfwingen -> pub_sub [label="(s)"];
 	 ecf_generator -> pub_sub [label="(s)"];
 	 github_helper -> pub_sub [label="(s)"];
 	 graphviz -> pub_sub [label="(s)"];
@@ -133,6 +144,7 @@ digraph Github_library_map {
 	 reporting -> pub_sub [label="(s)"];
 	 state_machine -> pub_sub [label="(s)"];
 	 eav -> randomizer [label="(s)"];
+	 ecfwingen -> randomizer [label="(s)"];
 	 ecf_generator -> randomizer [label="(s)"];
 	 framework -> randomizer [label="(s)"];
 	 github_helper -> randomizer [label="(s)"];
@@ -148,6 +160,7 @@ digraph Github_library_map {
 	 reporting -> randomizer [label="(s)"];
 	 state_machine -> randomizer [label="(s)"];
 	 validation -> randomizer [label="(s)"];
+	 ecfwingen -> state_machine [label="(s)"];
 	 ecf_generator -> state_machine [label="(s)"];
 	 github_helper -> state_machine [label="(s)"];
 	 graphviz -> state_machine [label="(s)"];
@@ -173,6 +186,7 @@ digraph Github_library_map {
 	 permission -> test_extension [label="(s)"];
 	 reporting -> test_extension [label="(s)"];
 	 web_components -> test_extension [label="(s)"];
+	 ecfwingen -> validation [label="(s)"];
 	 github_helper -> validation [label="(s)"];
 	 graphviz -> validation [label="(s)"];
 	 ig_test_project -> validation [label="(s)"];
