@@ -65,6 +65,9 @@ digraph Github_library_map {
 	 logging_extension;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 moonpeg;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 moonshot;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
