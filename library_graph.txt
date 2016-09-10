@@ -6,6 +6,9 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 bootstrap;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 business;
 	 node [image="..\images\branch.png";
 	 shape=circle];
 	 css;
@@ -65,6 +68,9 @@ digraph Github_library_map {
 	 logging_extension;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
+	 logistics;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
 	 moonpeg;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
@@ -75,6 +81,9 @@ digraph Github_library_map {
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 nssm_shell;
+	 node [image="..\images\leaf.png";
+	 shape=circle];
+	 outsource;
 	 node [image="..\images\leaf.png";
 	 shape=circle];
 	 permission;

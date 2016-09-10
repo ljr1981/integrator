@@ -21,6 +21,11 @@ inherit
 			path
 		end
 
+	FW_PROCESS_HELPER
+		undefine
+			out
+		end
+
 create
 	make
 
@@ -28,8 +33,22 @@ feature {NONE} -- Initialization
 
 	make
 			-- `make' Current.
+		local
+			l_output: STRING
+			l_list: LIST [STRING]
+			l_line: STRING
 		do
-			set_git_exe_path
+			if not has_file_in_path ("git.exe") and not attached last_git_exe_path then
+				set_git_exe_path
+			elseif has_file_in_path ("git.exe") then
+				l_output := output_of_command ("where git.exe", "")
+				l_list := l_output.split ('%N')
+				l_line := l_list [1]
+				l_line.replace_substring_all ("\git.exe%R", "")
+				create last_git_exe_path.make_from_string (l_line)
+			else
+				check False end
+			end
 		end
 
 feature -- Access

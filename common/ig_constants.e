@@ -32,7 +32,7 @@ feature {TEST_SET_BRIDGE} -- Implementation: Constants
 	github_tag_string: STRING = ".."
 	ise_library_tag_string: STRING = "$ISE_LIBRARY"
 	ise_eiffel_tag_string: STRING = "$ISE_EIFFEL"
-	ise_eiffel_environment_variable: STRING = "C:\Program Files (x86)\Eiffel Software\EiffelStudio 16.05 GPL"
-	ise_library_environment_variable: STRING = "C:\Program Files (x86)\Eiffel Software\EiffelStudio 16.05 GPL"
+	ise_eiffel_environment_variable: STRING = "C:\Program Files\Eiffel Software\EiffelStudio 16.05 GPL"
+	ise_library_environment_variable: STRING = "C:\Program Files\Eiffel Software\EiffelStudio 16.05 GPL"
 
 end
