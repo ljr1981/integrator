@@ -40,7 +40,7 @@ feature -- Test routines
 		do
 			create l_scanner
 			l_scanner.scan_github
-			assert_integers_equal ("has_127_you_may_have_more_or_less", 127, l_scanner.ecf_libraries.count)
+			assert_integers_equal ("has_194_you_may_have_more_or_less", 194, l_scanner.ecf_libraries.count)
 			assert_integers_equal ("has_9_branches", 9, l_scanner.branch_count)
 			assert_integers_equal ("has_8_leaves", 8, l_scanner.leaf_count)
 			assert_integers_equal ("has_96_trunks", 96, l_scanner.trunk_count)
